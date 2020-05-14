@@ -36,7 +36,7 @@
           <el-menu-item index="2-4" class="el-icon-star-on"> 解题表情况</el-menu-item>
         </el-submenu>
         <el-submenu index="3">
-          <template slot="title"><i class="el-icon-user-solid"></i>社区</template>
+          <template slot="title"><i class="el-icon-user-solid"></i>社区hah</template>
           <el-menu-item index="3-1" class="el-icon-plus"> 发布</el-menu-item>
           <el-menu-item index="3-2" class="el-icon-search"> 浏览</el-menu-item>
         </el-submenu>
