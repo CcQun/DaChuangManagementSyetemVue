@@ -20,13 +20,7 @@
         <el-submenu index="1">
           <template slot="title"><i class="el-icon-notebook-2"></i>流程管理</template>
           <el-menu-item index="1-1" class="el-icon-s-help"> 选择项目</el-menu-item>
-          <el-menu-item index="/management/create" class="el-icon-s-help"> 立项申请书</el-menu-item>
-          <el-menu-item index="1-3" class="el-icon-s-help"> 项目申报</el-menu-item>
-          <el-menu-item index="1-4" class="el-icon-s-help"> 月进展记录</el-menu-item>
-          <el-menu-item index="1-5" class="el-icon-s-help"> 中期检查表</el-menu-item>
-          <el-menu-item index="1-6" class="el-icon-s-help"> 提交项目成果</el-menu-item>
-          <el-menu-item index="1-7" class="el-icon-s-help"> 提交结题表</el-menu-item>
-          <el-menu-item index="1-8" class="el-icon-s-help"> 项目列支</el-menu-item>
+          <el-menu-item index="/management/create" class="el-icon-s-help"> 创建项目</el-menu-item>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title"><i class="el-icon-menu"></i>汇总统计</template>
@@ -36,7 +30,7 @@
           <el-menu-item index="2-4" class="el-icon-star-on"> 解题表情况</el-menu-item>
         </el-submenu>
         <el-submenu index="3">
-          <template slot="title"><i class="el-icon-user-solid"></i>社区hah</template>
+          <template slot="title"><i class="el-icon-user-solid"></i>社区</template>
           <el-menu-item index="3-1" class="el-icon-plus"> 发布</el-menu-item>
           <el-menu-item index="3-2" class="el-icon-search"> 浏览</el-menu-item>
         </el-submenu>
