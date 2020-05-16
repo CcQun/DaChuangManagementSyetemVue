@@ -72,7 +72,7 @@
                     <el-input v-model="ruleForm.name"></el-input>
                   </el-form-item>
                   <el-form-item label="项目学院" prop="region">
-                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+                    <el-select v-model="ruleForm.region" placeholder="请选项目学院">
                       <el-option label="软件学院" value="ruanjian"></el-option>
                       <el-option label="经管学院" value="jingguan"></el-option>
                       <el-option label="理学院" value="li"></el-option>
@@ -145,11 +145,11 @@
         },
         rules: {
           name: [
-            {required: true, message: '请输入活动名称', trigger: 'blur'},
+            {required: true, message: '请输入项目主题', trigger: 'blur'},
             {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
           ],
           region: [
-            {required: true, message: '请选择活动区域', trigger: 'change'}
+            {required: true, message: '请选择项目学院', trigger: 'change'}
           ],
           date1: [
             {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
