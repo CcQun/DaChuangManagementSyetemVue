@@ -5,6 +5,7 @@ import Login from '../components/Login'
 import Main from '../components/Main'
 import Create from '../components/management/Create'
 import Release from "../components/blink/Release";
+import Browse from "../components/blink/Browse";
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
 
@@ -33,8 +34,13 @@ const routes = [
   },
   {
     path:'/blink/Release',
-    name:'create',
+    name:'release',
     component:Release
+  },
+  {
+    path:'/blink/Browse',
+    name:'browse',
+    component:Browse
   }
 ]
 

@@ -2,7 +2,7 @@
   <el-container style="height: 740px; border: 1px solid #eee">
     <el-aside width="230px" style="background-color: rgb(238, 241, 246)">
       <el-menu :default-openeds="['3']"
-               default-active="/blink/Release"
+               default-active="/blink/Browse"
                class="el-menu-vertical-demo"
                @open="handleOpen"
                @close="handleClose"
@@ -32,7 +32,7 @@
         <el-submenu index="3">
           <template slot="title"><i class="el-icon-user-solid"></i>社区</template>
           <el-menu-item index="/blink/Release" class="el-icon-plus"> 发布</el-menu-item>
-          <el-menu-item index="3-2" class="el-icon-search"> 浏览</el-menu-item>
+          <el-menu-item index="/blink/Browse" class="el-icon-search"> 浏览</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-aside>

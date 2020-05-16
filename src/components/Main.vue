@@ -32,7 +32,7 @@
         <el-submenu index="3">
           <template slot="title"><i class="el-icon-user-solid"></i>社区</template>
           <el-menu-item index="/blink/Release" class="el-icon-plus"> 发布</el-menu-item>
-          <el-menu-item index="3-2" class="el-icon-search"> 浏览</el-menu-item>
+          <el-menu-item index="/blink/Browse" class="el-icon-search"> 浏览</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-aside>
