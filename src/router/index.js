@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Login from '../components/Login'
 import Main from '../components/Main'
 import Create from '../components/management/Create'
+import Release from "../components/blink/Release";
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
 
@@ -30,6 +31,11 @@ const routes = [
     name:'create',
     component:Create
   },
+  {
+    path:'/blink/Release',
+    name:'create',
+    component:Release
+  }
 ]
 
 const router = new VueRouter({

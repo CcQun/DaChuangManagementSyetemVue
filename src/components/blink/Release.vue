@@ -1,8 +1,8 @@
 <template>
   <el-container style="height: 740px; border: 1px solid #eee">
     <el-aside width="230px" style="background-color: rgb(238, 241, 246)">
-      <el-menu :default-openeds="['1']"
-               default-active="/management/create"
+      <el-menu :default-openeds="['3']"
+               default-active="/blink/Release"
                class="el-menu-vertical-demo"
                @open="handleOpen"
                @close="handleClose"
@@ -14,8 +14,8 @@
 
         <el-submenu index="4">
           <template slot="title"><i class="el-icon-notebook-2"></i>系统</template>
-          <el-menu-item index="../main" class="el-icon-video-play"> 返回首页</el-menu-item>
-          <el-menu-item index="4-2" class="el-icon-video-play"> 退出登录</el-menu-item>
+          <el-menu-item index="main" class="el-icon-video-play"> 返回首页</el-menu-item>
+          <el-menu-item index="login" class="el-icon-video-play" @click="QuitInfo()" > 退出登录</el-menu-item>
         </el-submenu>
         <el-submenu index="1">
           <template slot="title"><i class="el-icon-notebook-2"></i>流程管理</template>
@@ -39,35 +39,47 @@
 
     <el-container>
 
-      <el-header style="text-align: right ; font-size: 15px">
+      <el-header style="text-align: right ; font-size: 15px  " >
         <span style="text-align: center; font-size: 30px ;font-family: 幼圆" >创新创业项目管理信息系统&#12288&#12288&#12288&#12288</span>
         <span style="text-align: center; font-size: 30px">&#12288</span>
         <span style="text-align: right; font-size: 15px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp您的身份是：职业     </span>
         <span style="text-align: right; font-size: 15px">欢迎您，</span>
-        <el-dropdown trigger="click"><span class="el-dropdown-link" >
-          <span style="text-align-last: right; font-size: 22px">用户名</span><i class="el-icon-caret-bottom el-icon--right"></i>
-        </span>
+        <el-dropdown trigger="click">
+          <span class="el-dropdown-link" >
+            <el-button  type="info" round>
+              用户名<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+          </span>
           <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item>个人资料</el-dropdown-item>
             <el-dropdown-item class="clearfix">
               消息
               <el-badge class="mark" :value="12" />
             </el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item @click.native="Quit()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
 
       <el-main>
-<!--        <el-table :data="tableData">-->
-<!--          <el-table-column prop="date" label="日期" width="140">-->
-<!--          </el-table-column>-->
-<!--          <el-table-column prop="name" label="姓名" width="120">-->
-<!--          </el-table-column>-->
-<!--          <el-table-column prop="address" label="地址">-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-        立项申请子页面
+        <div>
+          <el-form  label-width="80px">
+            <el-container>
+                <el-aside width="300px" > </el-aside>
+              <el-main>
+                <el-form  label-width="80px">
+                  <el-form-item label="活动名称">
+                    <el-input label="活动名称"></el-input>
+                  </el-form-item>
+                  <el-form-item label="活动名称" prop="name">
+                    <el-input ></el-input>
+                  </el-form-item>
+                </el-form>
+              </el-main>
+              <el-aside width="300px" > </el-aside><!--  中间布局-->
+            </el-container>
+          </el-form>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -75,15 +87,7 @@
 
 <script>
   export default {
-    name: "Create",
-    data() {
-      const item = {
-
-      };
-      return {
-        tableData: Array(20).fill(item)
-      }
-    },
+    name: "release",
     methods:{
       // goBack() {
       //   console.log('go back');
@@ -93,6 +97,19 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      QuitInfo(){
+        this.$message({
+          message: '退出登录成功',
+          type: 'success'
+        });
+      },
+      Quit(){
+        this.$message({
+          message: '退出登录成功',
+          type: 'success'
+        });
+        this.$router.push({name:'login'})
       }
     },
     computed:{
@@ -106,18 +123,26 @@
   }
 </script>
 
-<style scoped>
-
-</style>
-
 <style>
-  .el-header {
-    background-color: #B3C0D1;
-    color: #545c64;
-    line-height: 60px;
-  }
-
   .el-aside {
     color: #545c64;
+  }
+  .el-dropdown + .el-dropdown {
+    margin-left: 15px;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
+
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
   }
 </style>
