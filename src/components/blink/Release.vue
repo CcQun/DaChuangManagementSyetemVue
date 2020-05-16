@@ -73,8 +73,10 @@
                   </el-form-item>
                   <el-form-item label="项目学院" prop="region">
                     <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
+                      <el-option label="软件学院" value="ruanjian"></el-option>
+                      <el-option label="经管学院" value="jingguan"></el-option>
+                      <el-option label="理学院" value="li"></el-option>
+                      <el-option label="计算机学院" value="jisuanji"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="活动时间" required>
