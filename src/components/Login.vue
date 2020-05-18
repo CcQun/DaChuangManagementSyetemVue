@@ -11,7 +11,7 @@
       </el-form-item>
       <el-form-item>
 <!--        <span slot="footer" >-->
-        <el-button type="primary" style="float:right" v-on:click="onSubmit('loginForm')">登 录</el-button>
+        <el-button type="primary" style="float:right" v-on:click="onSubmit()">登 录</el-button>
 <!--        </span>-->
       </el-form-item>
     </el-form>
@@ -35,7 +35,7 @@
     name: "Login",
     data() {
       return {
-        form: {
+        form: {//这是登录表单验证对象
           username: '',
           password: '',
           //
@@ -50,10 +50,12 @@
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
         rules: {
           username: [
-            {required: true, message: '账号不可为空', trigger: 'blur'}
+            {required: true, message: '账号不可为空', trigger: 'blur'},
+            { min: 3, max:10, message: "长度在3-10个字符", trigger: "blur"}
           ],
           password: [
-            {required: true, message: '密码不可为空', trigger: 'blur'}
+            {required: true, message: '密码不可为空', trigger: 'blur'},
+            { min: 6, max:15, message: "长度在6-15个字符", trigger: "blur"}
           ]
         },
 
@@ -63,20 +65,23 @@
       }
     },
     methods: {
-      onSubmit(formName) {
+      onSubmit() {
         // 为表单绑定验证功能
-        this.$refs[formName].validate((valid) => {
+        this.$refs.loginForm.validate( async valid => {
           if (valid) {
             // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
             this.$message({
               message: '登录成功',
               type: 'success'
             });
-            this.$router.push("/main");
+            // const {data:res} =await this.$http.post('login',this.form)
+            // console.log(res);
+
+            await this.$router.push("/main");
           } else {
             // this.dialogVisible = true;
             this.$message({
-              message: '请输入用户名或密码',
+              message: '请输入正确格式',
               type: 'error'
             });
             return false;

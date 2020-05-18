@@ -1,148 +1,283 @@
 <template>
-  <el-container style="height: 740px; border: 1px solid #eee">
-    <el-aside width="230px" style="background-color: rgb(238, 241, 246)">
-      <el-menu :default-openeds="['3']"
-               default-active="/blink/Browse"
-               class="el-menu-vertical-demo"
-               @open="handleOpen"
-               @close="handleClose"
-               background-color="#545c64"
-               text-color="#fff"
-               active-text-color="#ffd04b"
-               :router="true"
+<!-- <span>-->
+<!--   <el-container>-->
+<!--   <el-aside width="100px" > </el-aside>-->
+
+<!--   <el-main>-->
+<!--     <el-card class="top-box-card">-->
+<!--        <el-card class="box-card">-->
+<!--          <div v-for="o in 4" :key="o" class="text item">-->
+<!--          {{'列表内容 ' + o }}-->
+<!--          </div>-->
+<!--        </el-card>-->
+<!--     </el-card>-->
+<!--   </el-main>-->
+<!--   <el-aside width="100px" > </el-aside>&lt;!&ndash;  中间布局&ndash;&gt;-->
+<!--   </el-container>-->
+<!-- </span>-->
+
+  <div>
+
+    <div class="container">
+      <div class="handle-box">
+<!--        <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
+<!--          <el-option key="1" label="广东省" value="广东省"></el-option>-->
+<!--          <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
+<!--        </el-select>-->
+        <el-input v-model="query.name" placeholder="关键字" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+      </div>
+      <el-table
+        :data="tableData"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+        <el-table-column prop="title" label="主题"></el-table-column>
+        <el-table-column prop="blink_colleges" label="学院"></el-table-column>
+        <el-table-column prop="blink_fields" label="领域" align="center"></el-table-column>
+        <el-table-column prop='state' label="状态" align="center"></el-table-column>
 
-        <el-submenu index="4">
-          <template slot="title"><i class="el-icon-notebook-2"></i>系统</template>
-          <el-menu-item index="../main" class="el-icon-video-play"> 返回首页</el-menu-item>
-          <el-menu-item index="../login" class="el-icon-video-play" @click="QuitInfo()" > 退出登录</el-menu-item>
-        </el-submenu>
-        <el-submenu index="1">
-          <template slot="title"><i class="el-icon-notebook-2"></i>流程管理</template>
-          <el-menu-item index="1-1" class="el-icon-s-help"> 选择项目</el-menu-item>
-          <el-menu-item index="/management/create" class="el-icon-s-help"> 创建项目</el-menu-item>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title"><i class="el-icon-menu"></i>汇总统计</template>
-          <el-menu-item index="2-1" class="el-icon-star-on"> 立项申请书</el-menu-item>
-          <el-menu-item index="2-2" class="el-icon-star-on"> 项目申请书情况</el-menu-item>
-          <el-menu-item index="2-3" class="el-icon-star-on"> 中期检查表情况</el-menu-item>
-          <el-menu-item index="2-4" class="el-icon-star-on"> 解题表情况</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title"><i class="el-icon-user-solid"></i>社区</template>
-          <el-menu-item index="/blink/Release" class="el-icon-plus"> 发布</el-menu-item>
-          <el-menu-item index="/blink/Browse" class="el-icon-search"> 浏览</el-menu-item>
-        </el-submenu>
-      </el-menu>
-    </el-aside>
+        <el-table-column prop="date" label="发布时间"></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-zoom-in"
+              @click="handleEdit(scope.$index, scope.row)"
+            >查看</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-upload2"
+              class="red"
+              @click="handleDelete(scope.$index, scope.row)"
+            >加入</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :current-page="query.pageIndex"
+          :page-size="query.pageSize"
+          :total="pageTotal"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
+    </div>
 
-    <el-container>
-
-      <el-header style="text-align: right ; font-size: 15px  " >
-        <span style="text-align: center; font-size: 30px ;font-family: 幼圆" >创新创业项目管理信息系统&#12288&#12288&#12288&#12288</span>
-        <span style="text-align: center; font-size: 30px">&#12288</span>
-        <span style="text-align: right; font-size: 15px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp您的身份是：职业     </span>
-        <span style="text-align: right; font-size: 15px">欢迎您，</span>
-        <el-dropdown trigger="click">
-          <span class="el-dropdown-link" >
-            <el-button  type="info" round>
-              用户名<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-          </span>
-          <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item>个人资料</el-dropdown-item>
-            <el-dropdown-item class="clearfix">
-              消息
-              <el-badge class="mark" :value="12" />
-            </el-dropdown-item>
-            <el-dropdown-item @click.native="Quit()">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-header>
-
-      <el-main>
-        <div>
-          <el-form  label-width="80px">
-            <el-container>
-              <el-aside width="300px" > </el-aside>
-              <el-main>
-                <el-form  label-width="80px">
-                  <el-form-item label="活动名称">
-                    <el-input label="活动名称"></el-input>
-                  </el-form-item>
-                  <el-form-item label="活动名称" prop="name">
-                    <el-input ></el-input>
-                  </el-form-item>
-                </el-form>
-              </el-main>
-              <el-aside width="300px" > </el-aside><!--  中间布局-->
-            </el-container>
-          </el-form>
-        </div>
-      </el-main>
-    </el-container>
-  </el-container>
+    <!-- 编辑弹出框 -->
+    <el-dialog title="详细内容" :visible.sync="editVisible" width="30%">
+      <el-form ref="form" :model="form" label-width="70px">
+        <el-form-item label="主题">
+          <el-input v-model="form.title" disabled="disabled"></el-input>
+        </el-form-item>
+        <el-form-item label="内容">
+          <el-input type="textarea" v-model="form.content" disabled="disabled"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+<!--                <el-button @click="editVisible = false">取 消</el-button>-->
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
   export default {
     name: "Browse",
-    methods:{
-      // goBack() {
-      //   console.log('go back');
-      // },
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      QuitInfo(){
-        this.$message({
-          message: '退出登录成功',
-          type: 'success'
-        });
-      },
-      Quit(){
-        this.$message({
-          message: '退出登录成功',
-          type: 'success'
-        });
-        this.$router.push({name:'login'})
-      }
-    },
-    computed:{
-      activeIndex(){
-        const { name } = this.$route;
-        switch (name) {
+    data() {
+      return {
+        query: {
+          address: '',
+          name: '',
+          pageIndex: 1,
+          pageSize: 10
+        },
+        tableData: [
+          {
+            date: "2019-11-1",
+            id: 1,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+            content:'这是内容',
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
+          {
+            date: "2019-11-1",
+            id: 2,
+            title: 123,
+            blink_colleges: "软件",
+            blink_fields:'人工智能',
+            state: "未满",
+          },
 
+
+        ],
+        multipleSelection: [],
+        delList: [],
+        editVisible: false,
+        pageTotal: 0,
+        form: {},
+        idx: -1,
+        id: -1
+      };
+    },
+    created() {
+      // this.getData();
+    },
+    methods: {
+      // 获取 easy-mock 的模拟数据
+      getData() {
+        fetchData(this.query).then(res => {
+          console.log(res);
+          this.tableData = res.list;
+          this.pageTotal = res.pageTotal || 50;
+        });
+      },
+      // 触发搜索按钮
+      handleSearch() {
+        this.$set(this.query, 'pageIndex', 1);
+        this.getData();
+      },
+      // 加入操作
+      handleDelete(index, row) {
+        // 二次确认加入
+        this.$confirm('确定要加入么？', '提示', {
+          type: 'warning'
+        })
+          .then(() => {
+            this.$message.success('加入成功');
+            // this.tableData.splice(index, 1);
+          })
+          .catch(() => {});
+      },
+      // 多选操作
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      delAllSelection() {
+        const length = this.multipleSelection.length;
+        let str = '';
+        this.delList = this.delList.concat(this.multipleSelection);
+        for (let i = 0; i < length; i++) {
+          str += this.multipleSelection[i].name + ' ';
         }
+        this.$message.error(`删除了${str}`);
+        this.multipleSelection = [];
+      },
+      // 编辑操作
+      handleEdit(index, row) {
+        this.idx = index;
+        this.form = row;
+        this.editVisible = true;
+      },
+      // 保存编辑
+      saveEdit() {
+        this.editVisible = false;
+        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+        this.$set(this.tableData, this.idx, this.form);
+      },
+      // 分页导航
+      handlePageChange(val) {
+        this.$set(this.query, 'pageIndex', val);
+        this.getData();
       }
     }
   }
 </script>
 
 <style>
-  .el-aside {
+
+
+  .handle-box {
+    margin-bottom: 20px;
+  }
+
+  .handle-select {
+    width: 120px;
+  }
+
+  .handle-input {
+    width: 300px;
+    display: inline-block;
+  }
+  .table {
+    width: 100%;
+    font-size: 14px;
+  }
+  .red {
     color: #545c64;
   }
-  .el-dropdown + .el-dropdown {
-    margin-left: 15px;
+  .mr10 {
+    margin-right: 10px;
   }
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
-  body > .el-container {
-    margin-bottom: 40px;
-  }
-
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
+  .table-td-thumb {
+    display: block;
+    margin: auto;
+    width: 40px;
+    height: 40px;
   }
 </style>
