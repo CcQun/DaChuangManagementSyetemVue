@@ -1,50 +1,37 @@
 <template>
   <el-container style="height: 740px; border: 1px solid #eee">
     <el-aside width="230px" style="background-color: rgb(238, 241, 246)">
-      <el-menu :default-openeds="['1']"
-               default-active=""
-               class="el-menu-vertical-demo"
-               @open="handleOpen"
-               @close="handleClose"
-               background-color="#545c64"
-               text-color="#fff"
-               active-text-color="#ffd04b"
-               :router="true"
-               >
+      <el-menu
+        default-active="/release"
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose"
+        background-color="#545c64"
+        text-color="#fff"
+        active-text-color="#409EFF"
+        :router="true"
+        unique-opened
+      >
 
-        <el-submenu index="4">
-          <template slot="title"><i class="el-icon-notebook-2"></i>系统</template>
-          <el-menu-item index="main" class="el-icon-video-play"> 返回首页</el-menu-item>
-          <el-menu-item index="login" class="el-icon-video-play" @click="QuitInfo()" > 退出登录</el-menu-item>
+        <el-submenu :index="item.authName+''" v-for="item in menuList" :key="item.authName">
+          <template slot="title">
+            <i :class="iconsObj[item.id]"></i>
+            <span>
+              {{item.authName}}
+            </span>
+          </template>
+          <el-menu-item :index="subItem.path+''" v-for="subItem in item.children" :key="subItem.authName">
+            <template slot="title">
+              <i :class="subIconsObj[subItem.id]"></i>
+              <span>{{subItem.authName}}</span>
+            </template>
+          </el-menu-item>
         </el-submenu>
-        <el-submenu index="1">
-          <template slot="title"><i class="el-icon-notebook-2"></i>流程管理</template>
-          <el-menu-item index="1-1" class="el-icon-s-help"> 选择项目</el-menu-item>
-          <el-menu-item index="/management/create" class="el-icon-s-help"> 立项申请书</el-menu-item>
-          <el-menu-item index="1-3" class="el-icon-s-help"> 项目申报</el-menu-item>
-          <el-menu-item index="1-4" class="el-icon-s-help"> 月进展记录</el-menu-item>
-          <el-menu-item index="1-5" class="el-icon-s-help"> 中期检查表</el-menu-item>
-          <el-menu-item index="1-6" class="el-icon-s-help"> 提交项目成果</el-menu-item>
-          <el-menu-item index="1-7" class="el-icon-s-help"> 提交结题表</el-menu-item>
-          <el-menu-item index="1-8" class="el-icon-s-help"> 项目列支</el-menu-item>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title"><i class="el-icon-menu"></i>汇总统计</template>
-          <el-menu-item index="2-1" class="el-icon-star-on"> 立项申请书</el-menu-item>
-          <el-menu-item index="2-2" class="el-icon-star-on"> 项目申请书情况</el-menu-item>
-          <el-menu-item index="2-3" class="el-icon-star-on"> 中期检查表情况</el-menu-item>
-          <el-menu-item index="2-4" class="el-icon-star-on"> 解题表情况</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title"><i class="el-icon-user-solid"></i>社区</template>
-          <el-menu-item index="3-1" class="el-icon-plus"> 发布</el-menu-item>
-          <el-menu-item index="3-2" class="el-icon-search"> 浏览</el-menu-item>
-        </el-submenu>
+
       </el-menu>
     </el-aside>
 
     <el-container>
-
       <el-header style="text-align: right ; font-size: 15px  " >
         <span style="text-align: center; font-size: 30px ;font-family: 幼圆" >创新创业项目管理信息系统&#12288&#12288&#12288&#12288</span>
         <span style="text-align: center; font-size: 30px">&#12288</span>
@@ -68,16 +55,10 @@
       </el-header>
 
       <el-main>
-        <div>
-        <el-form  label-width="80px">
-          <el-form-item label="活动名称">
-            <el-input label="活动名称"></el-input>
-          </el-form-item>
-          <el-form-item label="活动名称" prop="name">
-            <el-input ></el-input>
-          </el-form-item>
-        </el-form>
-        </div>
+        <!--        路由占位符-->
+        <router-view>
+
+        </router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -85,8 +66,69 @@
 
 <script>
   export default {
+    created() {
+      // this.getMenuList()
+    },
     name: "Main",
     data() {
+      //左侧菜单数据
+      return{
+        menuList: [
+          {
+            id:'01',
+            authName:'流程管理',
+            path:'management',
+            children:[
+              {id:'create', authName:'创建项目', path:'create',},
+              {id: 'choose', authName: '选择项目', path: 'choose',}
+            ]
+          },
+          {
+            id:'02',
+            authName:'汇总统计',
+            path:'',
+            children:[
+              {id:'create1', authName:'立项申请书', path:'create1',},
+              {id: 'choose1', authName: '项目申请书情况', path: 'choose1',}
+            ]
+          },
+          {
+            id:'03',
+            authName:'社区',
+            path:'blink',
+            children:[
+              {id:'release', authName:'发布', path:'release',},
+              {id: 'browse', authName: '浏览', path: 'browse',}
+            ]
+          },
+          {
+            id:'04',
+            authName:'系统',
+            path:'blink',
+            children:[
+              {id:'quit', authName:'退出系统', path:'login',},
+              {id: 'wel', authName: '主页系统', path: 'wel',}
+            ]
+          }
+        ],
+        iconsObj:{
+          '01':'el-icon-notebook-2',
+          '02':'el-icon-s-help',
+          '03':'el-icon-s-custom',
+          '04':'el-icon-crop',
+        },
+        subIconsObj:{
+          'create':'el-icon-aim',
+          'choose':'el-icon-location',
+          'create':'el-icon-s-custom',
+          'choose':'el-icon-notebook-2',
+          'release':'el-icon-wind-power',
+          'browse':'el-icon-goblet-full',
+          'quit':'el-icon-house',
+          'wel':'el-icon-news',
+        },
+      }
+
       const item = {
 
       };
@@ -116,7 +158,11 @@
           type: 'success'
         });
         this.$router.push({name:'login'})
-      }
+      },
+      // //获取所有菜单
+      // getMenuList(){
+      //
+      // },
     },
     computed:{
       activeIndex(){
