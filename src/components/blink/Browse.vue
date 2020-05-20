@@ -55,7 +55,7 @@
               type="text"
               icon="el-icon-upload2"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleApply(scope.$index, scope.row)"
             >加入</el-button>
           </template>
         </el-table-column>
@@ -91,6 +91,8 @@
 </template>
 
 <script>
+  import Cookies from 'js-cookie';
+  import { mapMutations } from 'vuex';
   export default {
     name: "Browse",
     data() {
@@ -150,6 +152,7 @@
       // this.getData();
     },
     methods: {
+      ...mapMutations(['setToken']),
       // 获取 easy-mock 的模拟数据
       getData() {
         fetchData(this.query).then(res => {
@@ -164,17 +167,21 @@
         this.getData();
       },
       // 加入操作
-      handleDelete(index, row) {
+      handleApply(index, row) {
         // 二次确认加入
         this.$confirm('确定要加入么？', '提示', {
           type: 'warning'
         })
           .then(() => {
+
             this.$message.success('加入成功');
             // this.tableData.splice(index, 1);
           })
           .catch(() => {});
       },
+
+
+
       // 多选操作
       handleSelectionChange(val) {
         this.multipleSelection = val;
