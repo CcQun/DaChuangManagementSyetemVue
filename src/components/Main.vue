@@ -40,7 +40,7 @@
         <el-dropdown trigger="click">
           <span class="el-dropdown-link" >
             <el-button  type="info" round>
-              用户名<i class="el-icon-arrow-down el-icon--right"></i>
+              {{mian_Name}}<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
           </span>
           <el-dropdown-menu slot="dropdown" >
@@ -65,14 +65,18 @@
 </template>
 
 <script>
+  import Cookies from 'js-cookie';
   export default {
     created() {
+      this.getName()
       // this.getMenuList()
     },
     name: "Main",
     data() {
+
       //左侧菜单数据
       return{
+        mian_Name:'',
         menuList: [
           {
             id:'01',
@@ -98,7 +102,8 @@
             path:'blink',
             children:[
               {id:'release', authName:'发布', path:'release',},
-              {id: 'browse', authName: '浏览', path: 'browse',}
+              {id: 'browse', authName: '浏览', path: 'browse',},
+              {id: 'my_release', authName: '我的发布', path: 'my_release',}
             ]
           },
           {
@@ -106,7 +111,7 @@
             authName:'系统',
             path:'blink',
             children:[
-              {id:'quit', authName:'退出系统', path:'login',},
+              {id:'quit', authName:'退出系统', path:'app_login',},
               {id: 'wel', authName: '主页系统', path: 'wel',}
             ]
           }
@@ -126,6 +131,7 @@
           'browse':'el-icon-goblet-full',
           'quit':'el-icon-house',
           'wel':'el-icon-news',
+          'my_release':'el-icon-menu'
         },
       }
 
@@ -140,24 +146,21 @@
       // goBack() {
       //   console.log('go back');
       // },
+      getName(){
+        this.mian_Name=Cookies.get('student_name')
+      },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      QuitInfo(){
-        this.$message({
-          message: '退出登录成功',
-          type: 'success'
-        });
-      },
       Quit(){
         this.$message({
           message: '退出登录成功',
           type: 'success'
         });
-        this.$router.push({name:'login'})
+        this.$router.push({name:'/app_login'})
       },
       // //获取所有菜单
       // getMenuList(){

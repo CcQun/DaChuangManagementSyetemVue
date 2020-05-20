@@ -1,21 +1,4 @@
 <template>
-  <!-- <span>-->
-  <!--   <el-container>-->
-  <!--   <el-aside width="100px" > </el-aside>-->
-
-  <!--   <el-main>-->
-  <!--     <el-card class="top-box-card">-->
-  <!--        <el-card class="box-card">-->
-  <!--          <div v-for="o in 4" :key="o" class="text item">-->
-  <!--          {{'列表内容 ' + o }}-->
-  <!--          </div>-->
-  <!--        </el-card>-->
-  <!--     </el-card>-->
-  <!--   </el-main>-->
-  <!--   <el-aside width="100px" > </el-aside>&lt;!&ndash;  中间布局&ndash;&gt;-->
-  <!--   </el-container>-->
-  <!-- </span>-->
-
   <div>
 
     <div class="container">
@@ -56,7 +39,7 @@
               icon="el-icon-upload2"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-            >加入</el-button>
+            >审批</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -92,7 +75,8 @@
 
 <script>
   export default {
-    name: "Browse",
+    name: "My_Release",
+
     data() {
       return {
         query: {
@@ -115,26 +99,15 @@
           },
           {
             date: "2019-11-1",
-            id: 2,
+            id: 1,
             title: 123,
             blink_colleges: "软件",
             blink_fields:'人工智能',
             state: "未满",
+            content:'这是内容',
             student_name:'列车员',
             student_number:17301097,
           },
-          {
-            date: "2019-11-1",
-            id: 2,
-            title: 123,
-            blink_colleges: "软件",
-            blink_fields:'人工智能',
-            state: "未满",
-            student_name:'列车员',
-            student_number:17301097,
-          },
-
-
 
         ],
         multipleSelection: [],
@@ -208,19 +181,15 @@
       }
     }
   }
+
+
+
 </script>
 
-<style>
-
-
+<style scoped>
   .handle-box {
     margin-bottom: 20px;
   }
-
-  .handle-select {
-    width: 120px;
-  }
-
   .handle-input {
     width: 300px;
     display: inline-block;
@@ -234,11 +203,5 @@
   }
   .mr10 {
     margin-right: 10px;
-  }
-  .table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
   }
 </style>

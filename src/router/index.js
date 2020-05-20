@@ -8,6 +8,7 @@ import Release from "../components/blink/Release";
 import Browse from "../components/blink/Browse";
 import Wel from "../components/wel";
 import wel from "../components/wel";
+import My_Release from "../components/blink/My_Release";
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
 
@@ -17,11 +18,11 @@ const routes = [
   {
     path: '/',
     // redirect 重定向
-    redirect: '/login'
+    redirect: '/app_login'
   },
   {
-    path:'/login',
-    name:'login',
+    path:'/app_login',
+    name:'/app_login',
     component:Login
   },
   {
@@ -33,6 +34,7 @@ const routes = [
       { path:'/Release', name:'release', component:Release},
       { path:'/Create', name:'create', component:Create},
       { path:'/Browse', name:'browse', component:Browse},
+      { path:'/My_Release', name:'my_release', component:My_Release},
     ]
   },
   // {
@@ -57,5 +59,21 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+//   if(to.path === '/app_login') {
+//     next();
+//   } else {
+//     let token = localStorage.getItem('token');
+//     if(token === 'null' || token === '') {
+//       next('/app_login');
+//     }else {
+//       next();
+//     }
+//   }
+// });
+
+
+
 
 export default router

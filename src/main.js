@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import './plugins/element.js'
 import Vue from 'vue'
+
+
 import {
   Pagination,
   Dialog,
@@ -82,6 +84,7 @@ import {
   Message,
   Notification
 } from 'element-ui';
+
 
 Vue.use(Pagination);
 Vue.use(Dialog);
@@ -172,5 +175,62 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
+
+import store from './store'
+import axios from 'axios'
+import promise from 'es6-promise'
+promise.polyfill()
+
+import qs from 'qs'
+
+Vue.prototype.$qs = qs
+// const apiHost = process.env.NODE_ENV === 'development' ? '/' : process.env.VUE_APP_API
+// axios.defaults.baseURL =  apiHost
+Vue.prototype.$axios = axios;
+axios.defaults.headers.post['Content-Type']='application/json;charset=UTF-8';
+
+
+// axios.defaults.baseURL= 'http://localhost:8081'
+// axios.defaults.headers.post['Content-Type'] = "application/json"
+// axios.defaults.withCredentials = true
+// axios.defaults.headers.common['Authorization'] = store.state.token
+// Vue.prototype.$axios = axios
+
+
+// 添加请求拦截器
+axios.interceptors.request.use(config => {
+// 在发送请求之前做些什么
+//判断是否存在token，如果存在将每个页面header都添加token
+  if(store.state.token){
+    config.headers.common['Authorization']=store.state.token.token
+  }
+
+  return config;
+}, error => {
+// 对请求错误做些什么
+  return Promise.reject(error);
+});
+
+// http response 拦截器
+axios.interceptors.response.use(
+  response => {
+
+    return response;
+  },
+  error => {
+
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          this.$store.commit('del_token');
+          router.replace({
+            path: '/app_login',
+            query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
+          })
+      }
+    }
+    return Promise.reject(error.response.data)
+  });
