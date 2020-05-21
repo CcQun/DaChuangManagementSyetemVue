@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="container">
+    <div class="container" @click="getMyBlink()">
       <div class="handle-box">
         <!--        <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
         <!--          <el-option key="1" label="广东省" value="广东省"></el-option>-->
@@ -18,28 +18,27 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="title" label="主题"></el-table-column>
-        <el-table-column prop="student_name" label="姓名"></el-table-column>
-        <el-table-column prop="student_number" label="学号"></el-table-column>
-        <el-table-column prop="blink_colleges" label="学院"></el-table-column>
-        <el-table-column prop="blink_fields" label="领域" align="center"></el-table-column>
-        <el-table-column prop='state' label="状态" align="center"></el-table-column>
-
-        <el-table-column prop="date" label="发布时间"></el-table-column>
+        <el-table-column prop="blink_number" label="ID" width="55" align="center"></el-table-column>
+        <el-table-column prop="blink_title" label="主题" align="center"></el-table-column>
+        <el-table-column prop="student_name" label="姓名" align="center"></el-table-column>
+        <el-table-column prop="student_number" label="学号" align="center"></el-table-column>
+        <el-table-column prop="blink_college" label="学院" align="center"></el-table-column>
+        <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
+        <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
+        <el-table-column prop="creat_time" label="发布时间" align="center"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              icon="el-icon-zoom-in"
-              @click="handleEdit(scope.$index, scope.row)"
-            >查看</el-button>
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              icon="el-icon-zoom-in"-->
+<!--              @click="handleEdit(scope.$index, scope.row)"-->
+<!--            >查看</el-button>-->
             <el-button
               type="text"
               icon="el-icon-upload2"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
-            >审批</el-button>
+              @click="ApprovalEdit(scope.$index, scope.row) "
+            >查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,10 +58,10 @@
     <el-dialog title="详细内容" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
         <el-form-item label="主题">
-          <el-input v-model="form.title" disabled="disabled"></el-input>
+          <el-input v-model="form.blink_title" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item label="内容">
-          <el-input type="textarea" v-model="form.content" disabled="disabled"></el-input>
+          <el-input type="textarea" rows="5" v-model="form.blink_content" disabled="disabled"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -70,10 +69,51 @@
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
     </el-dialog>
+
+    <!-- 审批内容弹出框 -->
+    <el-dialog title="审批成员" :visible.sync="ApprovalVisible" width="30%">
+      <el-table
+        :data="ApprovalForm"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+        @selection-change="handleSelectionChange"
+      >
+
+
+        <el-table-column prop="student_name" label="姓名"   align="center"></el-table-column>
+        <el-table-column prop="student_number" label="学号" align="center"></el-table-column>
+<!--        <el-table-column prop="blinknum" label="想加入的" align="center"></el-table-column>-->
+        <el-table-column label="操作" width="180" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-zoom-in"
+              @click="Agree_A(scope.$index, scope.row)"
+            >同意</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-upload2"
+              class="red"
+              @click="Refuse_A(scope.$index, scope.row) "
+            >拒绝</el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+
+      <span slot="footer" class="dialog-footer">
+<!--                <el-button @click="editVisible = false">取 消</el-button>-->
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import Cookies from 'js-cookie';
+  import { mapMutations } from 'vuex';
   export default {
     name: "My_Release",
 
@@ -83,70 +123,79 @@
           address: '',
           name: '',
           pageIndex: 1,
-          pageSize: 10
+          pageSize: 9
         },
+        myApply_blink:
+          {
+            student_number:'',
+          },
         tableData: [
           {
-            date: "2019-11-1",
-            id: 1,
-            title: 123,
-            blink_colleges: "软件",
-            blink_fields:'人工智能',
-            state: "未满",
-            content:'这是内容',
-            student_name:'列车员',
-            student_number:17301097,
-          },
-          {
-            date: "2019-11-1",
-            id: 1,
-            title: 123,
-            blink_colleges: "软件",
-            blink_fields:'人工智能',
-            state: "未满",
-            content:'这是内容',
-            student_name:'列车员',
-            student_number:17301097,
+            blink_number: "",
+            student_number:"",
+            blink_title: "",
+            blink_content:"",
+            creat_time: "",
+            blink_college: "",
+            blink_field:"",
+            blink_state: "",
+            student_name:'',
+
           },
 
         ],
         multipleSelection: [],
         delList: [],
         editVisible: false,
+        ApprovalVisible: false,
         pageTotal: 0,
-        form: {},
+        form: {
+
+        },
+        Agree:{
+
+        },
+        Refuse:{
+
+        },
+        ApprovalForm:[
+          {
+            blinknum: "",
+            date: "",
+            major: "",
+            student_college: "",
+            student_gender: "",
+            student_introduction: "",
+            student_name: "",
+            student_number: '',
+          }
+        ],
         idx: -1,
-        id: -1
+        ApprovalNumber:{
+          blink_number: ''
+        },
+        ApplyOrRefuse:{
+          blink_number:"",
+          student_number:"",
+          blink_approval:""
+        }
+
       };
     },
-    created() {
-      // this.getData();
-    },
     methods: {
+      ...mapMutations(['setToken']),
       // 获取 easy-mock 的模拟数据
       getData() {
-        fetchData(this.query).then(res => {
-          console.log(res);
-          this.tableData = res.list;
-          this.pageTotal = res.pageTotal || 50;
-        });
+        // fetchData(this.query).then(res => {
+        //   console.log(res);
+        //   this.tableData = res.list;
+        //   this.pageTotal = res.pageTotal || 50;
+        // });
       },
       // 触发搜索按钮
       handleSearch() {
         this.$set(this.query, 'pageIndex', 1);
         this.getData();
-      },
-      // 加入操作
-      handleDelete(index, row) {
-        // 二次确认加入
-        this.$confirm('确定要加入么？', '提示', {
-          type: 'warning'
-        })
-          .then(() => {
-            this.$message.success('加入成功');
-            // this.tableData.splice(index, 1);
-          })
-          .catch(() => {});
       },
       // 多选操作
       handleSelectionChange(val) {
@@ -168,18 +217,254 @@
         this.form = row;
         this.editVisible = true;
       },
+      //同意加入队伍
+      Agree_A(index,row){
+        this.idx = index;
+        this.Agree = row;
+        // console.log(this.Agree);
+        this.$confirm('确定要加入么？', '提示', {
+          type: 'success'
+        })
+          .then(() => {
+            this.ApplyOrRefuse.blink_number=this.Agree.blinknum;
+            this.ApplyOrRefuse.student_number=this.Agree.student_number;
+            // console.log(this.Agree.blink_number);
+            this.ApplyOrRefuse.blink_approval=1;
+
+            // console.log(this.ApplyOrRefuse);
+            let that = this;
+            let params = JSON.stringify(that.ApplyOrRefuse);
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/blink/applyBlink",
+                  //请求参数
+                  data: params
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+                console.log(res.data.code);
+                if (res.data.code == "1") {
+                  console.log(res.data.msg);
+                  that.$message({
+                    title: "审批成功",
+                    message: "审批成功",
+                    type: "success"
+                  });
+                  // this.tableData.splice(index, 1);
+                }else{
+                  that.$message({
+                    title: "code不是1",
+                    message: "无此学生或无此队伍",
+                    type: "warning"
+                  });
+                }
+              }).catch(function() {
+              that.$notify({
+                title: "审批失败",
+                message: "服务器异常啊啊啊",
+                type: "error"
+              });
+              console.log("服务器异常iii");
+            });
+          })
+          .catch(() => {});
+
+
+      },
+      //拒绝加入队伍
+      Refuse_A(index,row){
+        this.idx = index;
+        this.Agree = row;
+        // console.log(this.Agree);
+        this.$confirm('确定要驳回么？', '提示', {
+          type: 'error'
+        })
+          .then(() => {
+            this.ApplyOrRefuse.blink_number=this.Agree.blinknum;
+            this.ApplyOrRefuse.student_number=this.Agree.student_number;
+            // console.log(this.Agree.blink_number);
+            this.ApplyOrRefuse.blink_approval=2;
+
+            // console.log(this.ApplyOrRefuse);
+            let that = this;
+            let params = JSON.stringify(that.ApplyOrRefuse);
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/blink/applyBlink",
+                  //请求参数
+                  data: params
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+                console.log(res.data.code);
+                if (res.data.code == "1") {
+                  console.log(res.data.msg);
+                  that.$message({
+                    title: "驳回成功",
+                    message: "驳回成功",
+                    type: "success"
+                  });
+                  // this.tableData.splice(index, 1);
+                }else{
+                  that.$message({
+                    title: "code不是1",
+                    message: "无此学生或无此队伍",
+                    type: "warning"
+                  });
+                }
+              }).catch(function() {
+              that.$notify({
+                title: "审批失败",
+                message: "服务器异常啊啊啊",
+                type: "error"
+              });
+              console.log("服务器异常iii");
+            });
+          })
+          .catch(() => {});
+
+      },
+
+      // 审批操作
+      ApprovalEdit(index,row2){
+        this.idx = index;
+        this.form = row2;
+        // console.log(row2);
+        // console.log(this.form.blink_number);
+        this.ApprovalNumber.blink_number=this.form.blink_number;
+
+        let params = JSON.stringify(this.ApprovalNumber);
+        let that= this;
+        that
+          .$axios({
+              //请求方式
+              method: "post",
+              //请求路劲
+              url: "/api/apply/selectApply",
+              //请求参数
+              data: params
+              //请求成功的回调函数
+            },
+            {
+              emulateJSON: true
+            }
+          )
+          .then(function(res) {
+
+            // console.log(res.data.code);
+            if (res.data.code == "1") {
+              // that.tableData = res.data.data;
+              that.ApprovalForm=res.data.data;
+              // console.log(that.ApprovalForm);
+
+            }else{
+              that.$message({
+                title: "信息错误",
+                message: "信息错误",
+                type: "error"
+              });
+            }
+          }).catch(function() {
+          that.$notify({
+            title: "登陆失败",
+            message: "服务器异常iiiii",
+            type: "error"
+          });
+          console.log("服务器异常aaa");
+        });
+
+        this.ApprovalVisible = true;
+      },
+
       // 保存编辑
       saveEdit() {
         this.editVisible = false;
-        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-        this.$set(this.tableData, this.idx, this.form);
+        // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+        // this.$set(this.tableData, this.idx, this.form);
       },
       // 分页导航
       handlePageChange(val) {
         this.$set(this.query, 'pageIndex', val);
         this.getData();
+      },
+
+      // 得到当前所有blink
+      getMyBlink(){
+        // console.log(this.tableData[0]);
+
+        let that= this;
+        that.myApply_blink.student_number=Cookies.get('student_number');
+        // that.myApply_blink.student_number='5'
+        let params = JSON.stringify(that.myApply_blink);
+        that
+          .$axios({
+              //请求方式
+              method: "post",
+              //请求路劲
+              // url: "/api/apply/selectApply",
+              url: "/api/blink/myBlink",
+              //请求参数
+              data: params
+              //请求成功的回调函数
+            },
+            {
+              emulateJSON: true
+            }
+          )
+          .then(function(res) {
+
+            // console.log(res.data.code);
+            if (res.data.code == "1") {
+
+              that.tableData = res.data.data;
+              that.changeState();
+
+            }else{
+              that.$message({
+                title: "信息错误",
+                message: "信息错误",
+                type: "error"
+              });
+            }
+          }).catch(function() {
+          that.$notify({
+            title: "失败",
+            message: "服务器异常iiiii",
+            type: "error"
+          });
+          console.log("服务器异常aaa");
+        });
+
+      },
+      changeState(){
+        for(let i = 0; i<this.tableData.length;i++){
+          if(this.tableData[i].blink_state=='0'){
+            this.tableData[i].blink_state='未满'
+          }
+        }
       }
-    }
+    },
+    mounted() {
+        // let that = this
+        // that.getMyBlink(()=>{
+        //   this.getMyBlink()
+        // })
+
+    },
   }
 
 

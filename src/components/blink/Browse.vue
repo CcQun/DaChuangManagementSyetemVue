@@ -1,29 +1,8 @@
 <template>
-  <!-- <span>-->
-  <!--   <el-container>-->
-  <!--   <el-aside width="100px" > </el-aside>-->
-
-  <!--   <el-main>-->
-  <!--     <el-card class="top-box-card">-->
-  <!--        <el-card class="box-card">-->
-  <!--          <div v-for="o in 4" :key="o" class="text item">-->
-  <!--          {{'列表内容 ' + o }}-->
-  <!--          </div>-->
-  <!--        </el-card>-->
-  <!--     </el-card>-->
-  <!--   </el-main>-->
-  <!--   <el-aside width="100px" > </el-aside>&lt;!&ndash;  中间布局&ndash;&gt;-->
-  <!--   </el-container>-->
-  <!-- </span>-->
-
   <div>
 
-    <div class="container">
-      <div class="handle-box">
-        <!--        <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-        <!--          <el-option key="1" label="广东省" value="广东省"></el-option>-->
-        <!--          <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-        <!--        </el-select>-->
+    <div class="container"  @click="getAllBlink()">
+      <div  class="handle-box">
         <el-input v-model="query.name" placeholder="关键字" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
@@ -35,15 +14,14 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="title" label="主题"></el-table-column>
+        <el-table-column prop="blink_number" label="ID" width="55" align="center"></el-table-column>
+        <el-table-column prop="blink_title" label="主题"></el-table-column>
         <el-table-column prop="student_name" label="姓名"></el-table-column>
         <el-table-column prop="student_number" label="学号"></el-table-column>
-        <el-table-column prop="blink_colleges" label="学院"></el-table-column>
-        <el-table-column prop="blink_fields" label="领域" align="center"></el-table-column>
-        <el-table-column prop='state' label="状态" align="center"></el-table-column>
-
-        <el-table-column prop="date" label="发布时间"></el-table-column>
+        <el-table-column prop="blink_college" label="学院"></el-table-column>
+        <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
+        <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
+        <el-table-column prop="creat_time" label="发布时间"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -72,21 +50,22 @@
       </div>
     </div>
 
-    <!-- 编辑弹出框 -->
+    <!-- 详细内容弹出框 -->
     <el-dialog title="详细内容" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
         <el-form-item label="主题">
-          <el-input v-model="form.title" disabled="disabled"></el-input>
+          <el-input v-model="form.blink_title" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item label="内容">
-          <el-input type="textarea" v-model="form.content" disabled="disabled"></el-input>
+          <el-input type="textarea" rows="10" style="height: 170px" v-model="form.blink_content" disabled="disabled"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
 <!--                <el-button @click="editVisible = false">取 消</el-button>-->
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
     </el-dialog>
+
   </div>
 </template>
 
@@ -94,6 +73,10 @@
   import Cookies from 'js-cookie';
   import { mapMutations } from 'vuex';
   export default {
+    created() {
+      this.getAllBlink()
+      // this.getMenuList()
+    },
     name: "Browse",
     data() {
       return {
@@ -101,44 +84,30 @@
           address: '',
           name: '',
           pageIndex: 1,
-          pageSize: 10
+          pageSize: 9
         },
         tableData: [
           {
-            date: "2019-11-1",
-            id: 1,
-            title: 123,
-            blink_colleges: "软件",
-            blink_fields:'人工智能',
-            state: "未满",
-            content:'这是内容',
-            student_name:'列车员',
-            student_number:17301097,
-          },
-          {
-            date: "2019-11-1",
-            id: 2,
-            title: 123,
-            blink_colleges: "软件",
-            blink_fields:'人工智能',
-            state: "未满",
-            student_name:'列车员',
-            student_number:17301097,
-          },
-          {
-            date: "2019-11-1",
-            id: 2,
-            title: 123,
-            blink_colleges: "软件",
-            blink_fields:'人工智能',
-            state: "未满",
-            student_name:'列车员',
-            student_number:17301097,
-          },
-
-
-
+            blink_number: "",
+            student_number:"",
+            blink_title: "",
+            blink_content:"",
+            creat_time: "",
+            blink_college: "",
+            blink_field:"",
+            blink_state: "",
+            student_name:'',
+          }
         ],
+        apply_blink:
+          {
+            blink_number: '',
+            student_number:'',
+          },
+        myApply_blink:
+          {
+            apply_student_number:'',
+          },
         multipleSelection: [],
         delList: [],
         editVisible: false,
@@ -153,14 +122,9 @@
     },
     methods: {
       ...mapMutations(['setToken']),
-      // 获取 easy-mock 的模拟数据
-      getData() {
-        fetchData(this.query).then(res => {
-          console.log(res);
-          this.tableData = res.list;
-          this.pageTotal = res.pageTotal || 50;
-        });
-      },
+
+
+
       // 触发搜索按钮
       handleSearch() {
         this.$set(this.query, 'pageIndex', 1);
@@ -169,15 +133,63 @@
       // 加入操作
       handleApply(index, row) {
         // 二次确认加入
-        this.$confirm('确定要加入么？', '提示', {
-          type: 'warning'
-        })
-          .then(() => {
-
-            this.$message.success('加入成功');
-            // this.tableData.splice(index, 1);
+        this.apply_blink.student_number=Cookies.get('student_number');
+        this.apply_blink.blink_number=row.blink_number;
+        console.log(row.student_number);
+        console.log(this.apply_blink.student_number);
+        if (this.apply_blink.student_number == row.student_number){
+          this.$message({
+            title: "code不是1",
+            message: "你不能加入自己发布的组队！",
+            type: "error"
+          });
+          console.log(1);
+        }else{
+          this.$confirm('确定要加入么？', '提示', {
+            type: 'success'
           })
-          .catch(() => {});
+            .then(() => {
+              let that = this;
+              let params = JSON.stringify(that.apply_blink);
+              console.log(that.apply_blink);
+              //ajax请求
+              that
+                .$axios({
+                    //请求方式
+                    method: "post",
+                    //请求路劲
+                    url: "/api/blink/applyBlink",
+                    //请求参数
+                    data: params
+                  },
+                  {
+                    emulateJSON: true
+                  }
+                )
+                .then(function(res) {
+                  // console.log(res.data.code);
+                  if (res.data.code == "1") {
+                    console.log(res.data.code);
+                    // this.tableData.splice(index, 1);
+                  }else{
+                    that.$message({
+                      title: "code不是1",
+                      message: "你已经申请加入此blink",
+                      type: "warning"
+                    });
+                  }
+                }).catch(function() {
+                that.$notify({
+                  title: "加入失败",
+                  message: "服务器异常啊啊啊",
+                  type: "error"
+                });
+                console.log("服务器异常iii");
+              });
+            })
+            .catch(() => {});
+        }
+
       },
 
 
@@ -205,13 +217,68 @@
       // 保存编辑
       saveEdit() {
         this.editVisible = false;
-        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-        this.$set(this.tableData, this.idx, this.form);
+        // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+        // this.$set(this.tableData, this.idx, this.form);
       },
       // 分页导航
       handlePageChange(val) {
         this.$set(this.query, 'pageIndex', val);
         this.getData();
+      },
+      // 得到当前所有blink
+      getAllBlink(){
+        // console.log(this.tableData[0]);
+
+        let that= this;
+        that.myApply_blink.apply_student_number=Cookies.get('student_number');
+        // console.log(that.myApply_blink.apply_student_number);
+        let params = JSON.stringify(that.myApply_blink);
+        // this.$http.get()
+        that
+          .$axios({
+              //请求方式
+              method: "post",
+              //请求路劲
+              url: "/api/blink/myBlink",
+              //请求参数
+              data: params
+              //请求成功的回调函数
+            },
+            {
+              emulateJSON: true
+            }
+          )
+          .then(function(res) {
+
+            // console.log(res.data.code);
+            if (res.data.code == "1") {
+
+              that.tableData = res.data.data;
+              that.changeState();
+
+            }else{
+              that.$message({
+                title: "信息错误",
+                message: "aaaaaaaaaaaaaaaaaaaaa",
+                type: "error"
+              });
+            }
+          }).catch(function() {
+          that.$notify({
+            title: "登陆失败",
+            message: "服务器异常iiiii",
+            type: "error"
+          });
+          console.log("服务器异常aaa");
+        });
+
+      },
+      changeState(){
+        for(let i = 0; i<this.tableData.length;i++){
+          if(this.tableData[i].blink_state=='0'){
+            this.tableData[i].blink_state='未满'
+          }
+        }
       }
     }
   }

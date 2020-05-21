@@ -42,13 +42,6 @@
         form: {
           student_number: '17301091',
           student_password: '123456',
-          //
-          // note: {
-          //   backgroundImage: "url(" + require("../assets/logo.png") + ")",
-          //   backgroundRepeat: "no-repeat",
-          //   backgroundSize: "25px auto",
-          //   marginTop: "5px",
-          // }
         },
 
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
@@ -70,7 +63,8 @@
       ...mapMutations(['setToken']),
 
       onSubmit(formName) {
-
+        console.log(formName.student_number);
+        console.log(this.form);
         //为表单绑定验证功能
         let that = this;
         that.$refs[formName].validate((valid) => {
