@@ -11,6 +11,7 @@
 <!--        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
       </div>
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         class="table"
@@ -170,7 +171,8 @@
           blink_number:"",
           student_number:"",
           blink_approval:""
-        }
+        },
+        loading:true
 
       };
     },
@@ -422,7 +424,7 @@
           });
           console.log("服务器异常，未启动后端");
         });
-
+        this.loading=false
       },
       // 改变状态
       changeState(){
@@ -431,7 +433,8 @@
             this.tableData[i].blink_state='未满'
           }
         }
-      }
+      },
+
     },
     mounted() {
         //

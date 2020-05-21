@@ -1,43 +1,46 @@
 <template>
   <div>
 
-    <div class="container"  @click="getAllBlink()">
+    <div class="container"  >
       <div  class="handle-box">
-        <el-input v-model="query.name" placeholder="关键字" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        <el-input v-model="search.keywords" placeholder="关键字" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
       </div>
-      <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column prop="blink_number" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="blink_title" label="主题"></el-table-column>
-        <el-table-column prop="student_name" label="姓名"></el-table-column>
-        <el-table-column prop="student_number" label="学号"></el-table-column>
-        <el-table-column prop="blink_college" label="学院"></el-table-column>
-        <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
-        <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
-        <el-table-column prop="creat_time" label="发布时间"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
-          <template slot-scope="scope">
-            <el-button
-              type="text"
-              icon="el-icon-zoom-in"
-              @click="handleEdit(scope.$index, scope.row)"
-            >查看</el-button>
-            <el-button
-              type="text"
-              icon="el-icon-upload2"
-              class="red"
-              @click="handleApply(scope.$index, scope.row)"
-            >加入</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div @click="getAllBlink()">
+        <el-table
+
+          v-loading="loading"
+          :data="tableData"
+          border
+          class="table"
+          ref="multipleTable"
+          header-cell-class-name="table-header"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column prop="blink_number" label="ID" width="55" align="center"></el-table-column>
+          <el-table-column prop="blink_title" label="主题" align="center"></el-table-column>
+          <el-table-column prop="student_name" label="姓名" align="center"></el-table-column>
+          <el-table-column prop="student_number" label="学号" align="center"></el-table-column>
+          <el-table-column prop="blink_college" label="学院" align="center"></el-table-column>
+          <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
+          <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
+          <el-table-column prop="creat_time" label="发布时间" align="center"></el-table-column>
+          <el-table-column label="操作" width="180" align="center">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                icon="el-icon-zoom-in"
+                @click="handleEdit(scope.$index, scope.row)"
+              >查看</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-upload2"
+                class="red"
+                @click="handleApply(scope.$index, scope.row)"
+              >加入</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       <div class="pagination">
         <el-pagination
           background
@@ -48,10 +51,27 @@
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
+      </div>
     </div>
 
     <!-- 详细内容弹出框 -->
     <el-dialog title="详细内容" :visible.sync="editVisible" width="30%">
+      <el-form ref="form" :model="form" label-width="70px">
+        <el-form-item label="主题" >
+          <el-input v-model="form.blink_title" disabled="disabled"></el-input>
+        </el-form-item>
+        <el-form-item label="内容">
+          <el-input type="textarea" rows="10" style="height: 170px" v-model="form.blink_content" disabled="disabled"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+<!--                <el-button @click="editVisible = false">取 消</el-button>-->
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 详细内容弹出框 -->
+    <el-dialog title="详细内容" :visible.sync="searchVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
         <el-form-item label="主题">
           <el-input v-model="form.blink_title" disabled="disabled"></el-input>
@@ -81,12 +101,25 @@
     data() {
       return {
         query: {
-          address: '',
-          name: '',
-          pageIndex: 1,
-          pageSize: 9
+          keywords: '',
+        },
+        search: {
+          keywords: '',
         },
         tableData: [
+          {
+            blink_number: "",
+            student_number:"",
+            blink_title: "",
+            blink_content:"",
+            creat_time: "",
+            blink_college: "",
+            blink_field:"",
+            blink_state: "",
+            student_name:'',
+          }
+        ],
+        searchData: [
           {
             blink_number: "",
             student_number:"",
@@ -111,22 +144,66 @@
         multipleSelection: [],
         delList: [],
         editVisible: false,
+        searchVisible:false,
         pageTotal: 0,
         form: {},
         idx: -1,
-        id: -1
+        id: -1,
+        loading: true
       };
     },
-    created() {
-      // this.getData();
+    created(){
+      // @click="getAllBlink()"
+     // this.auto()
     },
     methods: {
       ...mapMutations(['setToken']),
 
+      auto(){
+        this.getAllBlink()
+      },
       // 触发搜索按钮
       handleSearch() {
-        this.$set(this.query, 'pageIndex', 1);
-        this.getData();
+        // this.searchVisible=true
+        let that = this;
+        console.log(this.search.keywords+'aaaaaaaa');
+        let params = JSON.stringify(that.search);
+        console.log(that.search);
+        //ajax请求
+        that
+          .$axios({
+              //请求方式
+              method: "post",
+              //请求路劲
+              url: "/api/blink/searchblink",
+              //请求参数
+              data: params
+            },
+            {
+              emulateJSON: true
+            }
+          )
+          .then(function(res) {
+            // console.log(res.data.code);
+            if (res.data.code == "1") {
+              that.tableData = res.data.data;
+              console.log(that.tableData.creat_time);
+              that.changeState()
+            }else{
+              that.$message({
+                title: "code不是1",
+                message: "你已经申请加入此blink",
+                type: "warning"
+              });
+            }
+          }).catch(function() {
+          that.$notify({
+            title: "搜索失败",
+            message: "服务器异常啊啊啊",
+            type: "error"
+          });
+          console.log("服务器异常，未启动后端");
+        });
       },
       // 加入操作
       handleApply(index, row) {
@@ -220,8 +297,8 @@
       // 分页导航
       handlePageChange(val) {
         this.$set(this.query, 'pageIndex', val);
-        this.getData();
       },
+
       // 得到当前所有blink
       getAllBlink(){
         // console.log(this.tableData[0]);
@@ -268,6 +345,7 @@
           });
           console.log("服务器异常，未启动后端");
         });
+        this.loading=false
 
       },
       // 改变状态
