@@ -78,13 +78,9 @@
     },
     methods:{
       ...mapMutations(['setToken']),
-      // goBack() {
-      //   console.log('go back');
-      // },
       getName(){
         this.ruleForm.student_number=Cookies.get('student_number')
       },
-
 
       //这是提交表单
       submitForm(formName) {
@@ -163,22 +159,6 @@
 </script>
 
 <style>
-  /*.el-aside {*/
-  /*  color: #545c64;*/
-  /*}*/
-  /*.el-dropdown + .el-dropdown {*/
-  /*}*/
-  /*.el-icon-arrow-down {*/
-  /*}*/
-  /*body > .el-container {*/
-  /*}*/
-
-  /*.el-container:nth-child(5) .el-aside,*/
-  /*.el-container:nth-child(6) .el-aside {*/
-  /*}*/
-
-  /*.el-container:nth-child(7) .el-aside {*/
-  /*}*/
   .blink_con{
     height: 250px;
     line-height: 150px;

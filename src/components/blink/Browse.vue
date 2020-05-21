@@ -123,8 +123,6 @@
     methods: {
       ...mapMutations(['setToken']),
 
-
-
       // 触发搜索按钮
       handleSearch() {
         this.$set(this.query, 'pageIndex', 1);
@@ -139,7 +137,7 @@
         console.log(this.apply_blink.student_number);
         if (this.apply_blink.student_number == row.student_number){
           this.$message({
-            title: "code不是1",
+            title: "标题",
             message: "你不能加入自己发布的组队！",
             type: "error"
           });
@@ -184,7 +182,7 @@
                   message: "服务器异常啊啊啊",
                   type: "error"
                 });
-                console.log("服务器异常iii");
+                console.log("服务器异常，未启动后端");
               });
             })
             .catch(() => {});
@@ -192,12 +190,11 @@
 
       },
 
-
-
       // 多选操作
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      // 删除操作
       delAllSelection() {
         const length = this.multipleSelection.length;
         let str = '';
@@ -266,13 +263,14 @@
           }).catch(function() {
           that.$notify({
             title: "登陆失败",
-            message: "服务器异常iiiii",
+            message: "服务器异常出错",
             type: "error"
           });
-          console.log("服务器异常aaa");
+          console.log("服务器异常，未启动后端");
         });
 
       },
+      // 改变状态
       changeState(){
         for(let i = 0; i<this.tableData.length;i++){
           if(this.tableData[i].blink_state=='0'){

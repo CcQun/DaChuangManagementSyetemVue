@@ -7,8 +7,8 @@
         <!--          <el-option key="1" label="广东省" value="广东省"></el-option>-->
         <!--          <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
         <!--        </el-select>-->
-        <el-input v-model="query.name" placeholder="关键字" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+<!--        <el-input v-model="query.name" placeholder="关键字" class="handle-input mr10"></el-input>-->
+<!--        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
       </div>
       <el-table
         :data="tableData"
@@ -28,14 +28,9 @@
         <el-table-column prop="creat_time" label="发布时间" align="center"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-<!--            <el-button-->
-<!--              type="text"-->
-<!--              icon="el-icon-zoom-in"-->
-<!--              @click="handleEdit(scope.$index, scope.row)"-->
-<!--            >查看</el-button>-->
             <el-button
               type="text"
-              icon="el-icon-upload2"
+              icon="el-icon-s-opportunity"
               class="red"
               @click="ApprovalEdit(scope.$index, scope.row) "
             >查看</el-button>
@@ -80,8 +75,6 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange"
       >
-
-
         <el-table-column prop="student_name" label="姓名"   align="center"></el-table-column>
         <el-table-column prop="student_number" label="学号" align="center"></el-table-column>
 <!--        <el-table-column prop="blinknum" label="想加入的" align="center"></el-table-column>-->
@@ -89,12 +82,12 @@
           <template slot-scope="scope">
             <el-button
               type="text"
-              icon="el-icon-zoom-in"
+              icon="el-icon-check"
               @click="Agree_A(scope.$index, scope.row)"
             >同意</el-button>
             <el-button
               type="text"
-              icon="el-icon-upload2"
+              icon="el-icon-close"
               class="red"
               @click="Refuse_A(scope.$index, scope.row) "
             >拒绝</el-button>
@@ -104,7 +97,6 @@
       </el-table>
 
       <span slot="footer" class="dialog-footer">
-<!--                <el-button @click="editVisible = false">取 消</el-button>-->
         <el-button type="primary" @click="saveEdit">确 定</el-button>
       </span>
     </el-dialog>
@@ -201,6 +193,7 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      // 删除操作
       delAllSelection() {
         const length = this.multipleSelection.length;
         let str = '';
@@ -228,10 +221,8 @@
           .then(() => {
             this.ApplyOrRefuse.blink_number=this.Agree.blinknum;
             this.ApplyOrRefuse.student_number=this.Agree.student_number;
-            // console.log(this.Agree.blink_number);
             this.ApplyOrRefuse.blink_approval=1;
 
-            // console.log(this.ApplyOrRefuse);
             let that = this;
             let params = JSON.stringify(that.ApplyOrRefuse);
             //ajax请求
@@ -240,7 +231,7 @@
                   //请求方式
                   method: "post",
                   //请求路劲
-                  url: "/api/blink/applyBlink",
+                  url: "/api/apply/checkApply",
                   //请求参数
                   data: params
                 },
@@ -257,7 +248,6 @@
                     message: "审批成功",
                     type: "success"
                   });
-                  // this.tableData.splice(index, 1);
                 }else{
                   that.$message({
                     title: "code不是1",
@@ -271,28 +261,24 @@
                 message: "服务器异常啊啊啊",
                 type: "error"
               });
-              console.log("服务器异常iii");
+              console.log("服务器异常，未启动后端");
             });
           })
           .catch(() => {});
-
 
       },
       //拒绝加入队伍
       Refuse_A(index,row){
         this.idx = index;
         this.Agree = row;
-        // console.log(this.Agree);
         this.$confirm('确定要驳回么？', '提示', {
           type: 'error'
         })
           .then(() => {
             this.ApplyOrRefuse.blink_number=this.Agree.blinknum;
             this.ApplyOrRefuse.student_number=this.Agree.student_number;
-            // console.log(this.Agree.blink_number);
             this.ApplyOrRefuse.blink_approval=2;
 
-            // console.log(this.ApplyOrRefuse);
             let that = this;
             let params = JSON.stringify(that.ApplyOrRefuse);
             //ajax请求
@@ -301,7 +287,7 @@
                   //请求方式
                   method: "post",
                   //请求路劲
-                  url: "/api/blink/applyBlink",
+                  url: "/api/apply/checkApply",
                   //请求参数
                   data: params
                 },
@@ -318,7 +304,6 @@
                     message: "驳回成功",
                     type: "success"
                   });
-                  // this.tableData.splice(index, 1);
                 }else{
                   that.$message({
                     title: "code不是1",
@@ -332,7 +317,7 @@
                 message: "服务器异常啊啊啊",
                 type: "error"
               });
-              console.log("服务器异常iii");
+              console.log("服务器异常，未启动后端");
             });
           })
           .catch(() => {});
@@ -343,8 +328,6 @@
       ApprovalEdit(index,row2){
         this.idx = index;
         this.form = row2;
-        // console.log(row2);
-        // console.log(this.form.blink_number);
         this.ApprovalNumber.blink_number=this.form.blink_number;
 
         let params = JSON.stringify(this.ApprovalNumber);
@@ -365,12 +348,9 @@
           )
           .then(function(res) {
 
-            // console.log(res.data.code);
             if (res.data.code == "1") {
               // that.tableData = res.data.data;
               that.ApprovalForm=res.data.data;
-              // console.log(that.ApprovalForm);
-
             }else{
               that.$message({
                 title: "信息错误",
@@ -381,10 +361,10 @@
           }).catch(function() {
           that.$notify({
             title: "登陆失败",
-            message: "服务器异常iiiii",
+            message: "服务器异常出错",
             type: "error"
           });
-          console.log("服务器异常aaa");
+          console.log("服务器异常，未启动后端");
         });
 
         this.ApprovalVisible = true;
@@ -393,29 +373,23 @@
       // 保存编辑
       saveEdit() {
         this.editVisible = false;
-        // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-        // this.$set(this.tableData, this.idx, this.form);
+        this.ApprovalVisible = false
       },
       // 分页导航
       handlePageChange(val) {
         this.$set(this.query, 'pageIndex', val);
         this.getData();
       },
-
       // 得到当前所有blink
       getMyBlink(){
-        // console.log(this.tableData[0]);
-
         let that= this;
         that.myApply_blink.student_number=Cookies.get('student_number');
-        // that.myApply_blink.student_number='5'
         let params = JSON.stringify(that.myApply_blink);
         that
           .$axios({
               //请求方式
               method: "post",
               //请求路劲
-              // url: "/api/apply/selectApply",
               url: "/api/blink/myBlink",
               //请求参数
               data: params
@@ -443,13 +417,14 @@
           }).catch(function() {
           that.$notify({
             title: "失败",
-            message: "服务器异常iiiii",
+            message: "服务器异常出错",
             type: "error"
           });
-          console.log("服务器异常aaa");
+          console.log("服务器异常，未启动后端");
         });
 
       },
+      // 改变状态
       changeState(){
         for(let i = 0; i<this.tableData.length;i++){
           if(this.tableData[i].blink_state=='0'){
@@ -459,11 +434,7 @@
       }
     },
     mounted() {
-        // let that = this
-        // that.getMyBlink(()=>{
-        //   this.getMyBlink()
-        // })
-
+        //
     },
   }
 
