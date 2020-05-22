@@ -26,7 +26,7 @@
         <el-table-column prop="blink_college" label="学院" align="center"></el-table-column>
         <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
         <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
-        <el-table-column prop="creat_time" label="发布时间" align="center"></el-table-column>
+        <el-table-column prop="create_time" label="发布时间" align="center"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -128,7 +128,7 @@
             student_number:"",
             blink_title: "",
             blink_content:"",
-            creat_time: "",
+            create_time: "",
             blink_college: "",
             blink_field:"",
             blink_state: "",

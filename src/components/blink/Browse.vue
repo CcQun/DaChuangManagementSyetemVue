@@ -24,7 +24,7 @@
           <el-table-column prop="blink_college" label="学院" align="center"></el-table-column>
           <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
           <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
-          <el-table-column prop="creat_time" label="发布时间" align="center"></el-table-column>
+          <el-table-column prop="create_time" label="发布时间" align="center"></el-table-column>
           <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
               <el-button
@@ -112,7 +112,7 @@
             student_number:"",
             blink_title: "",
             blink_content:"",
-            creat_time: "",
+            create_time: "",
             blink_college: "",
             blink_field:"",
             blink_state: "",
@@ -125,7 +125,7 @@
             student_number:"",
             blink_title: "",
             blink_content:"",
-            creat_time: "",
+            create_time: "",
             blink_college: "",
             blink_field:"",
             blink_state: "",
@@ -166,9 +166,7 @@
       handleSearch() {
         // this.searchVisible=true
         let that = this;
-        console.log(this.search.keywords+'aaaaaaaa');
         let params = JSON.stringify(that.search);
-        console.log(that.search);
         //ajax请求
         that
           .$axios({
@@ -187,7 +185,8 @@
             // console.log(res.data.code);
             if (res.data.code == "1") {
               that.tableData = res.data.data;
-              console.log(that.tableData.creat_time);
+              // console.log(that.searchData);
+              // that.changeData()
               that.changeState()
             }else{
               that.$message({
@@ -355,6 +354,43 @@
             this.tableData[i].blink_state='未满'
           }
         }
+      },
+      // 改变数据
+      changeData(){
+        console.log(this.tableData);
+        this.tableData=[{
+          blink_number: "",
+          student_number:"",
+          blink_title: "",
+          blink_content:"",
+          create_time: "",
+          blink_college: "",
+          blink_field:"",
+          blink_state: "",
+          student_name:'',
+        }]
+        console.log("changeData");
+        console.log(this.tableData);
+        console.log(this.searchData);
+
+        this.tableData=this.searchData
+
+        // for(let i = 0; i<this.searchData.length;i++){
+        //   console.log(i);
+        //   console.log("i个");
+        //   console.log(this.searchData[i].blink_number);
+        //   this.tableData[i].blink_number=this.searchData[i].blink_number
+        //   console.log("blink number");
+        //   this.tableData[i].blink_title=this.searchData[i].blink_title
+        //   this.tableData[i].blink_content=this.searchData[i].blink_content
+        //   this.tableData[i].creat_time=this.searchData[i].create_time
+        //   this.tableData[i].blink_college=this.searchData[i].blink_college
+        //   this.tableData[i].blink_field=this.searchData[i].blink_field
+        //   this.tableData[i].blink_state=this.searchData[i].blink_state
+        //   this.tableData[i].student_name=this.searchData[i].student_name
+        //
+        // }
+        console.log(this.tableData);
       }
     }
   }
