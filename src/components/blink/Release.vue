@@ -114,7 +114,7 @@
                     message: "发布成功",
                     type: 'success'
                   });
-                  // that.$router.push("/main");
+                  that.$router.push("/my_release");
                 }else{
                   that.$message({
                     title: "发布失败",

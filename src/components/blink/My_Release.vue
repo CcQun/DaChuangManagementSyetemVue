@@ -67,7 +67,7 @@
     </el-dialog>
 
     <!-- 审批内容弹出框 -->
-    <el-dialog title="审批成员" :visible.sync="ApprovalVisible" width="30%">
+    <el-dialog title="审批成员" :visible.sync="ApprovalVisible" width="50%">
       <el-table
         :data="ApprovalForm"
         border
@@ -78,6 +78,8 @@
       >
         <el-table-column prop="student_name" label="姓名"   align="center"></el-table-column>
         <el-table-column prop="student_number" label="学号" align="center"></el-table-column>
+        <el-table-column prop="student_gender" label="性别"   align="center"></el-table-column>
+        <el-table-column prop="major" label="学院" align="center"></el-table-column>
 <!--        <el-table-column prop="blinknum" label="想加入的" align="center"></el-table-column>-->
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
@@ -153,6 +155,7 @@
         },
         ApprovalForm:[
           {
+            blink_approval:"",
             blinknum: "",
             date: "",
             major: "",
@@ -160,7 +163,7 @@
             student_gender: "",
             student_introduction: "",
             student_name: "",
-            student_number: '',
+            student_number: 17301113
           }
         ],
         idx: -1,
@@ -331,7 +334,7 @@
         this.idx = index;
         this.form = row2;
         this.ApprovalNumber.blink_number=this.form.blink_number;
-
+        console.log(this.ApprovalNumber.blink_number);
         let params = JSON.stringify(this.ApprovalNumber);
         let that= this;
         that
@@ -351,12 +354,15 @@
           .then(function(res) {
 
             if (res.data.code == "1") {
-              // that.tableData = res.data.data;
+              // console.log(res.data.code+'aaa');
+              console.log(res.data.data);
               that.ApprovalForm=res.data.data;
+              that.ApprovalVisible = true;
             }else{
+              that.ApprovalVisible = false;
               that.$message({
-                title: "信息错误",
-                message: "信息错误",
+                title: "提示",
+                message: "还没有人加入你的队伍",
                 type: "error"
               });
             }
@@ -368,8 +374,8 @@
           });
           console.log("服务器异常，未启动后端");
         });
+        // this.ApprovalVisible = true;
 
-        this.ApprovalVisible = true;
       },
 
       // 保存编辑
