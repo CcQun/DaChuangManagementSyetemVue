@@ -103,7 +103,8 @@
             children:[
               {id:'release', authName:'发布', path:'release',},
               {id: 'browse', authName: '浏览', path: 'browse',},
-              {id: 'my_release', authName: '我的发布', path: 'my_release',}
+              {id: 'my_release', authName: '我的发布', path: 'my_release',},
+              {id: 'my_apply', authName: '我的加入', path: 'my_apply',}
             ]
           },
           {
@@ -131,7 +132,8 @@
           'browse':'el-icon-goblet-full',
           'quit':'el-icon-house',
           'wel':'el-icon-news',
-          'my_release':'el-icon-menu'
+          'my_release':'el-icon-menu',
+          'my_apply':'el-icon-menu'
         },
       }
 

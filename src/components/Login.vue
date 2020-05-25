@@ -10,23 +10,19 @@
         <el-input type="password" placeholder="请输入密码" v-model="form.student_password"/>
       </el-form-item>
       <el-form-item>
-<!--        <span slot="footer" >-->
+        <el-form-item >
+          <template>
+            <el-radio v-model="radio" label="1" style="color: #303133">学生</el-radio>
+            <el-radio v-model="radio" label="2" style="color: #303133">老师</el-radio>
+          </template>
+        </el-form-item>
+        <el-form-item>
         <el-button type="primary" style="float:right" v-on:click="onSubmit('loginForm')">登 录</el-button>
-<!--        </span>-->
+        </el-form-item>
       </el-form-item>
     </el-form>
 
-<!--    <el-dialog-->
-<!--      title="提  示"-->
-<!--      :visible.sync="dialogVisible"-->
-<!--      width="30%"-->
-<!--      :before-close="handleClose">-->
-<!--      <span>请输入账号和密码</span>-->
-<!--      <span slot="footer" class="dialog-footer">-->
-<!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
 
-<!--      </span>-->
-<!--    </el-dialog>-->
   </div>
 </template>
 
@@ -39,9 +35,11 @@
     name: "Login",
     data() {
       return {
+        radio:"1",
         form: {
           student_number: '17301091',
           student_password: '123456',
+          login_type :''
         },
 
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
@@ -69,7 +67,8 @@
         let that = this;
         that.$refs[formName].validate((valid) => {
           let params = JSON.stringify(that.form);
-          if (valid) {
+          if (valid&&that.radio=='1') {
+            that.form.login_type='1',
             //ajax请求
                 that
                   .$axios({
@@ -90,25 +89,16 @@
                     if (res.data.code == "1") {
                       Cookies.set('student_name',res.data.msg ,3600)
                       Cookies.set('student_number',that.form.student_number ,3600)
-                      // that.$notify({
-                      //   title: "登陆成功",
-                      //   message: res.data.msg,
-                      //   type: "success"
-                      // });
+
                       that.$message({
                         title: "登陆成功",
                         message: "登陆成功",
                         type: 'success'
                       });
                       that.$router.push("/main");
-                      // that.push.path("/main")
-                      // that.push({path:"/main"});
+
                     }else{
-                      // that.$notify({
-                      //   title: "登陆失败",
-                      //   message: "请输入正确的用户名或密码",
-                      //   type: "error"
-                      // });
+
                       that.$message({
                         title: "登陆失败",
                         message: "请输入正确的用户名或密码",
@@ -125,16 +115,59 @@
                   });
 
 
-            // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
-            // that.$message({
-            //   message: '登录成功',
-            //   type: 'success'
-            // });
-            // that.$router.push("/main");
-          } else {
+          } else if((valid&&that.radio=='2')){
+            that.form.login_type='2',
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/usr/login",
+                  //请求参数
+                  data: params
+                  //请求成功的回调函数
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+
+                if (res.data.code == "1") {
+                  Cookies.set('student_name',res.data.msg ,3600)
+                  Cookies.set('student_number',that.form.student_number ,3600)
+
+                  that.$message({
+                    title: "登陆成功",
+                    message: "登陆成功",
+                    type: 'success'
+                  });
+                  that.$router.push("/main");
+
+                }else{
+
+                  that.$message({
+                    title: "登陆失败",
+                    message: "请输入正确的用户名或密码",
+                    type: "error"
+                  });
+                }
+              }).catch(function() {
+              that.$notify({
+                title: "登陆失败",
+                message: "服务器异常",
+                type: "error"
+              });
+              console.log("服务器异常");
+            });
+
+
+          }
+          else {
             // this.dialogVisible = true;
             that.$message({
-              message: '请输入用户名或密码',
+              message: '请选择正确类型',
               type: 'error'
             });
             return false;

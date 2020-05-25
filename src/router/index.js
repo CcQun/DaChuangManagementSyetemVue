@@ -9,6 +9,7 @@ import Browse from "../components/blink/Browse";
 import Wel from "../components/wel";
 import wel from "../components/wel";
 import My_Release from "../components/blink/My_Release";
+import My_Apply from "../components/blink/My_Apply";
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
 
@@ -35,6 +36,7 @@ const routes = [
       { path:'/Create', name:'create', component:Create},
       { path:'/Browse', name:'browse', component:Browse},
       { path:'/My_Release', name:'my_release', component:My_Release},
+      { path:'/My_Apply', name:'my_apply', component:My_Apply},
     ]
   },
   // {
