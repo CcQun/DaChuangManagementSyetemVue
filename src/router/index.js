@@ -10,6 +10,11 @@ import Wel from "../components/wel";
 import wel from "../components/wel";
 import My_Release from "../components/blink/My_Release";
 import My_Apply from "../components/blink/My_Apply";
+import Teacher_Main from "../components/Teacher_Main";
+import Project_Browse from "../components/project/Project_Browse";
+import Project_Create from "../components/project/Project_Create";
+import Project_My_Apply from "../components/project/Project_My_Apply";
+import Project_My_Release from "../components/project/Project_My_Release";
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
 
@@ -27,6 +32,11 @@ const routes = [
     component:Login
   },
   {
+    path:'/teacher_main',
+    name:'/teacher_main',
+    component:Teacher_Main
+  },
+  {
     path:'/main',
     name:'main',
     component:Main,
@@ -37,6 +47,17 @@ const routes = [
       { path:'/Browse', name:'browse', component:Browse},
       { path:'/My_Release', name:'my_release', component:My_Release},
       { path:'/My_Apply', name:'my_apply', component:My_Apply},
+      { path:'/Project_My_Apply', name:'project_my_apply', component:Project_My_Apply},
+      { path:'/Project_Browse', name:'project_browse', component:Project_Browse},
+    ]
+  },
+  {
+    path:'/teacher_main',
+    name:'teacher_main',
+    component:Teacher_Main,
+    children:[
+      { path:'/Project_Create', name:'project_create', component:Project_Create},
+      { path:'/Project_My_Release', name:'project_my_release', component:Project_My_Release},
     ]
   },
   // {

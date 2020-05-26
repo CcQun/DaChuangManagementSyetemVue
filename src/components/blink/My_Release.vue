@@ -212,11 +212,46 @@
           type: 'warning'
         })
           .then(() => {
-            this.$message.success('删除成功');
+            let that = this;
+            let params = JSON.stringify(that.DeleteBlink_number);
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/blink/deleteblink",
+                  //请求参数
+                  data: params
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+                console.log(res.data.code);
+                if (res.data.code == "1") {
+                  console.log(res.data.msg);
+                  that.$message({
+                    title: "删除成功",
+                    message: "删除成功",
+                    type: "success"
+                  });
+                }else{
+                  that.$message({
+                    title: "code不是1",
+                    message: "没有此动态",
+                    type: "warning"
+                  });
+                }
+              })
+
             this.tableData.splice(index, 1);
           })
           .catch(() => {});
         console.log(this.DeleteBlink_number.blink_number);
+
+
 
 
       },

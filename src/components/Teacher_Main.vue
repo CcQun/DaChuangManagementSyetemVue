@@ -35,7 +35,7 @@
       <el-header style="text-align: right ; font-size: 15px  " >
         <span style="text-align: center; font-size: 30px ;font-family: 幼圆" >创新创业项目管理信息系统&#12288&#12288&#12288&#12288</span>
         <span style="text-align: center; font-size: 30px">&#12288</span>
-        <span style="text-align: right; font-size: 15px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp您的身份是：学生     </span>
+        <span style="text-align: right; font-size: 15px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp您的身份是：老师     </span>
         <span style="text-align: right; font-size: 15px">欢迎您，</span>
         <el-dropdown trigger="click">
           <span class="el-dropdown-link" >
@@ -71,7 +71,7 @@
       this.getName()
       // this.getMenuList()
     },
-    name: "Main",
+    name: "Teacher_Main",
     data() {
 
       //左侧菜单数据
@@ -83,8 +83,8 @@
             authName:'流程管理',
             path:'management',
             children:[
-              {id: 'project_browse', authName: '选择项目', path: 'project_browse',},
-              {id: 'project_my_apply', authName: '我的加入', path: 'project_my_apply',}
+              {id:'project_create', authName:'发布项目', path:'project_create',},
+              {id: 'project_my_release', authName: '我的发布', path: 'project_my_release',},
             ]
           },
           {
@@ -96,17 +96,7 @@
               {id: 'choose1', authName: '项目申请书情况', path: 'choose1',}
             ]
           },
-          {
-            id:'03',
-            authName:'社区',
-            path:'blink',
-            children:[
-              {id:'release', authName:'发布', path:'release',},
-              {id: 'browse', authName: '浏览', path: 'browse',},
-              {id: 'my_release', authName: '我的发布', path: 'my_release',},
-              {id: 'my_apply', authName: '我的加入', path: 'my_apply',}
-            ]
-          },
+
           {
             id:'04',
             authName:'系统',
@@ -124,17 +114,16 @@
           '04':'el-icon-crop',
         },
         subIconsObj:{
-          'project_browse':'el-icon-aim',
-          'project_my_apply':'el-icon-location',
-          'create':'el-icon-s-custom',
-          'choose':'el-icon-notebook-2',
+          'project_create':'el-icon-aim',
+          'project_my_release':'el-icon-location',
+          'create1':'el-icon-s-custom',
+          'choose1':'el-icon-notebook-2',
           'release':'el-icon-wind-power',
           'browse':'el-icon-goblet-full',
           'quit':'el-icon-house',
           'wel':'el-icon-news',
           'my_release':'el-icon-menu',
-          'my_apply':'el-icon-menu',
-
+          'my_apply':'el-icon-menu'
         },
       }
 
@@ -150,7 +139,7 @@
       //   console.log('go back');
       // },
       getName(){
-        this.mian_Name=Cookies.get('student_name')
+        this.mian_Name=Cookies.get('teacher_name')
       },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);

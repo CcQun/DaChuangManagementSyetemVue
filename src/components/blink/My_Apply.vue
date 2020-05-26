@@ -15,23 +15,14 @@
       >
         <el-table-column prop="blink_number" label="ID" width="55" align="center"></el-table-column>
         <el-table-column prop="blink_title" label="主题" align="center"></el-table-column>
-        <el-table-column prop="student_name" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="student_number" label="学号" align="center"></el-table-column>
+<!--        <el-table-column prop="student_name" label="姓名" align="center"></el-table-column>-->
+<!--        <el-table-column prop="student_number" label="学号" align="center"></el-table-column>-->
         <el-table-column prop="blink_college" label="学院" align="center"></el-table-column>
         <el-table-column prop="blink_field" label="领域" align="center"></el-table-column>
         <el-table-column prop='blink_state' label="状态" align="center"></el-table-column>
-        <el-table-column prop="create_time" label="发布时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
-          <template slot-scope="scope">
-            <el-button
-              type="text"
-              icon="el-icon-s-opportunity"
-              class="red"
-              @click="ViewEdit(scope.$index, scope.row) "
-            >查看</el-button>
+        <el-table-column prop='blink_approval' label="结果" align="center"></el-table-column>
+        <el-table-column prop="blink_create_time" label="发布时间" align="center"></el-table-column>
 
-          </template>
-        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -45,37 +36,7 @@
       </div>
     </div>
 
-    <!-- 编辑弹出框 -->
-    <el-dialog title="详细内容" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="主题">
-          <el-input v-model="form.blink_title" disabled="disabled"></el-input>
-        </el-form-item>
-        <el-form-item label="内容">
-          <el-input type="textarea" rows="5" v-model="form.blink_content" disabled="disabled"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-<!--                <el-button @click="editVisible = false">取 消</el-button>-->
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-    </el-dialog>
 
-    <!-- 审批内容弹出框 -->
-    <el-dialog title="审批成员" :visible.sync="ApprovalVisible" width="50%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="主题">
-          <el-input v-model="form.blink_title" disabled="disabled"></el-input>
-        </el-form-item>
-        <el-form-item label="内容">
-          <el-input type="textarea" rows="10" style="height: 170px" v-model="form.blink_content" disabled="disabled"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-<!--                <el-button @click="editVisible = false">取 消</el-button>-->
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -100,14 +61,17 @@
         tableData: [
           {
             blink_number: "",
-            student_number:"",
+            // student_number:"",
             blink_title: "",
             blink_content:"",
-            create_time: "",
+            blink_create_time: "",
             blink_college: "",
             blink_field:"",
             blink_state: "",
-            student_name:'',
+            // student_name:'',
+            blink_approval:'',
+
+
 
           },
 
@@ -238,7 +202,7 @@
               //请求方式
               method: "post",
               //请求路劲
-              url: "/api/blink/myBlink",
+              url: "/api/apply/getApprove",
               //请求参数
               data: params
               //请求成功的回调函数
@@ -277,6 +241,15 @@
         for(let i = 0; i<this.tableData.length;i++){
           if(this.tableData[i].blink_state=='0'){
             this.tableData[i].blink_state='未满'
+          }
+        }
+        for(let i = 0; i<this.tableData.length;i++){
+          if(this.tableData[i].blink_approval=='0'){
+            this.tableData[i].blink_approval='待审批'
+          }else if(this.tableData[i].blink_approval=='1'){
+            this.tableData[i].blink_approval='通过'
+          }else if(this.tableData[i].blink_approval=='2'){
+            this.tableData[i].blink_approval='驳回'
           }
         }
       },

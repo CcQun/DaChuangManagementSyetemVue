@@ -3,11 +3,11 @@
 
     <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px" class="login-box">
       <h3 class="login-title">大创平台系统</h3>
-      <el-form-item label="学号" prop="student_number">
-        <el-input type="text" placeholder="请输入账号" v-model="form.student_number"/>
+      <el-form-item label="学号" prop="number">
+        <el-input type="text" placeholder="请输入账号" v-model="form.number"/>
       </el-form-item>
-      <el-form-item label="密码" prop="student_password">
-        <el-input type="password" placeholder="请输入密码" v-model="form.student_password"/>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
       </el-form-item>
       <el-form-item>
         <el-form-item >
@@ -35,19 +35,19 @@
     name: "Login",
     data() {
       return {
-        radio:"1",
+        radio:"",
         form: {
-          student_number: '17301091',
-          student_password: '123456',
-          login_type :''
+          number: '17301091',
+          password: '123456',
+          ts :''
         },
 
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
         rules: {
-          student_number: [
+          number: [
             {required: true, message: '账号不可为空', trigger: 'blur'}
           ],
-          student_password: [
+          password: [
             {required: true, message: '密码不可为空', trigger: 'blur'}
           ]
         },
@@ -61,14 +61,20 @@
       ...mapMutations(['setToken']),
 
       onSubmit(formName) {
-        console.log(formName.student_number);
+        console.log(formName.number);
         console.log(this.form);
         //为表单绑定验证功能
         let that = this;
+        if(that.radio=='1'){
+          that.form.ts='0'
+        }else if(that.radio=='2'){
+          that.form.ts='1'
+        }
         that.$refs[formName].validate((valid) => {
+          // console.log(that.radio+"radio");
           let params = JSON.stringify(that.form);
           if (valid&&that.radio=='1') {
-            that.form.login_type='1',
+            console.log(that.radio+"radio");
             //ajax请求
                 that
                   .$axios({
@@ -88,7 +94,7 @@
 
                     if (res.data.code == "1") {
                       Cookies.set('student_name',res.data.msg ,3600)
-                      Cookies.set('student_number',that.form.student_number ,3600)
+                      Cookies.set('student_number',that.form.number ,3600)
 
                       that.$message({
                         title: "登陆成功",
@@ -116,7 +122,6 @@
 
 
           } else if((valid&&that.radio=='2')){
-            that.form.login_type='2',
             //ajax请求
             that
               .$axios({
@@ -135,15 +140,15 @@
               .then(function(res) {
 
                 if (res.data.code == "1") {
-                  Cookies.set('student_name',res.data.msg ,3600)
-                  Cookies.set('student_number',that.form.student_number ,3600)
+                  Cookies.set('teacher_name',res.data.msg ,3600)
+                  Cookies.set('teacher_number',that.form.number ,3600)
 
                   that.$message({
                     title: "登陆成功",
                     message: "登陆成功",
                     type: 'success'
                   });
-                  that.$router.push("/main");
+                  that.$router.push("/teacher_main");
 
                 }else{
 
