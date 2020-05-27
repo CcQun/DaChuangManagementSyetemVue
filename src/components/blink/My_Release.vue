@@ -164,6 +164,7 @@
             student_introduction: "",
             student_name: "",
             student_number: ""
+
           }
         ],
         idx: -1,
@@ -275,8 +276,9 @@
       Agree_A(index,row){
         this.idx = index;
         this.Agree = row;
-        // console.log(this.Agree);
-        this.$confirm('确定要加入么？', '提示', {
+
+        console.log(this.Agree);
+        this.$confirm('确定同意该请求么？', '提示', {
           type: 'success'
         })
           .then(() => {

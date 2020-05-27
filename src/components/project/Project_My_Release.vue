@@ -33,7 +33,7 @@
               type="text"
               icon="el-icon-delete-solid"
               class="red"
-              @click="DeleteBlink(scope.$index, scope.row) "
+              @click="DeleteProject(scope.$index, scope.row) "
             >删除</el-button>
           </template>
         </el-table-column>
@@ -162,8 +162,8 @@
 
         ApprovalForm:[
           {
-            blink_approval:"",
-            blinknum: "",
+            project_approval:"",
+            projectnum: "",
             date: "",
             major: "",
             student_college: "",
@@ -175,15 +175,15 @@
         ],
         idx: -1,
         ApprovalNumber:{
-          blink_number: ''
+          project_number: ''
         },
-        DeleteBlink_number:{
-          blink_number: ''
+        DeleteProject_number:{
+          project_number: ''
         },
         ApplyOrRefuse:{
-          blink_number:"",
+          project_number:"",
           student_number:"",
-          blink_approval:""
+          project_approval:""
         },
         loading:true
       };
@@ -200,9 +200,55 @@
         this.multipleSelection = val;
       },
       // 删除操作
-      DeleteBlink(index,row){
+      DeleteProject(index,row){
         this.idx = index;
         this.form = row;
+        this.DeleteProject_number.project_number=this.form.project_number;
+
+        console.log(this.DeleteProject_number.project_number);
+
+        // 二次确认删除
+        this.$confirm('确定要删除吗？', '提示', {
+          type: 'warning'
+        })
+          .then(() => {
+            let that = this;
+            let params = JSON.stringify(that.DeleteProject_number);
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/project/deleteproject",
+                  //请求参数
+                  data: params
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+                console.log(res.data.code);
+                if (res.data.code == "1") {
+                  console.log(res.data.msg);
+                  that.$message({
+                    title: "删除成功",
+                    message: "删除成功",
+                    type: "success"
+                  });
+                }else{
+                  that.$message({
+                    title: "code不是1",
+                    message: "没有此项目",
+                    type: "warning"
+                  });
+                }
+              })
+
+            this.tableData.splice(index, 1);
+          })
+          .catch(() => {});
       },
       // 编辑操作
       handleEdit(index, row) {
@@ -212,15 +258,163 @@
       },
       //同意加入队伍
       Agree_A(index,row){
+        this.idx = index;
+        this.Agree = row;
+        console.log(this.Agree);
+        this.$confirm('确定同意该请求么？', '提示', {
+          type: 'success'
+        })
+          .then(() => {
+            console.log(this.Agree.project_number+'Agree.project_number');
 
+            this.ApplyOrRefuse.project_number=this.Agree.projectnum;
+            this.ApplyOrRefuse.student_number=this.Agree.student_number;
+            this.ApplyOrRefuse.project_approval=1;
+            console.log(this.ApplyOrRefuse);
+            let that = this;
+            let params = JSON.stringify(that.ApplyOrRefuse);
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/project/checkProjectApply",
+                  //请求参数
+                  data: params
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+                console.log(res.data.code);
+                if (res.data.code == "1") {
+                  console.log(res.data.msg);
+                  that.$message({
+                    title: "审批成功",
+                    message: "审批成功",
+                    type: "success"
+                  });
+                }else{
+                  that.$message({
+                    title: "code不是1",
+                    message: "错误",
+                    type: "warning"
+                  });
+                }
+              }).catch(function() {
+              that.$notify({
+                title: "审批失败",
+                message: "服务器异常啊啊啊",
+                type: "error"
+              });
+              console.log("服务器异常，未启动后端");
+            });
+          })
+          .catch(() => {});
       },
       //拒绝加入队伍
       Refuse_A(index,row){
+        this.idx = index;
+        this.Agree = row;
+        // console.log(this.Agree);
+        this.$confirm('确定拒绝该请求么？', '提示', {
+          type: 'success'
+        })
+          .then(() => {
+            this.ApplyOrRefuse.project_number=this.Agree.projectnum;
+            this.ApplyOrRefuse.student_number=this.Agree.student_number;
+            this.ApplyOrRefuse.project_approval=2;
 
+            let that = this;
+            let params = JSON.stringify(that.ApplyOrRefuse);
+            //ajax请求
+            that
+              .$axios({
+                  //请求方式
+                  method: "post",
+                  //请求路劲
+                  url: "/api/project/checkProjectApply",
+                  //请求参数
+                  data: params
+                },
+                {
+                  emulateJSON: true
+                }
+              )
+              .then(function(res) {
+                console.log(res.data.code);
+                if (res.data.code == "1") {
+                  console.log(res.data.msg);
+                  that.$message({
+                    title: "驳回成功",
+                    message: "驳回成功",
+                    type: "success"
+                  });
+                }else{
+                  that.$message({
+                    title: "code不是1",
+                    message: "错误",
+                    type: "warning"
+                  });
+                }
+              }).catch(function() {
+              that.$notify({
+                title: "审批失败",
+                message: "服务器异常啊啊啊",
+                type: "error"
+              });
+              console.log("服务器异常，未启动后端");
+            });
+          })
+          .catch(() => {});
       },
       // 审批操作
       ApprovalEdit(index,row2){
+        this.idx = index;
+        this.form = row2;
+        this.ApprovalNumber.project_number=this.form.project_number;
+        console.log(this.ApprovalNumber.project_number);
+        let params = JSON.stringify(this.ApprovalNumber);
+        let that= this;
+        that
+          .$axios({
+              //请求方式
+              method: "post",
+              //请求路劲
+              url: "/api/project/selectProjectApply",
+              //请求参数
+              data: params
+              //请求成功的回调函数
+            },
+            {
+              emulateJSON: true
+            }
+          )
+          .then(function(res) {
 
+            if (res.data.code == "1") {
+              // console.log(res.data.code+'aaa');
+              console.log(res.data.data);
+              that.ApprovalForm=res.data.data;
+              that.ApprovalVisible = true;
+            }else{
+              that.ApprovalVisible = false;
+              that.$message({
+                title: "提示",
+                message: "还没有人加入你的队伍",
+                type: "error"
+              });
+            }
+          }).catch(function() {
+          that.$notify({
+            title: "登陆失败",
+            message: "服务器异常出错",
+            type: "error"
+          });
+          console.log("服务器异常，未启动后端");
+        });
       },
       // 保存编辑
       saveEdit() {

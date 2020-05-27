@@ -119,19 +119,6 @@
             student_name:'',
           }
         ],
-        searchData: [
-          {
-            blink_number: "",
-            student_number:"",
-            blink_title: "",
-            blink_content:"",
-            create_time: "",
-            blink_college: "",
-            blink_field:"",
-            blink_state: "",
-            student_name:'',
-          }
-        ],
         apply_blink:
           {
             blink_number: '',
@@ -159,9 +146,6 @@
     methods: {
       ...mapMutations(['setToken']),
 
-      auto(){
-        this.getAllBlink()
-      },
       // 触发搜索按钮
       handleSearch() {
         // this.searchVisible=true
@@ -185,13 +169,12 @@
             // console.log(res.data.code);
             if (res.data.code == "1") {
               that.tableData = res.data.data;
-              // console.log(that.searchData);
               // that.changeData()
               that.changeState()
             }else{
               that.$message({
                 title: "code不是1",
-                message: "你已经申请加入此blink",
+                message: "查看失败",
                 type: "warning"
               });
             }
@@ -244,6 +227,11 @@
                   // console.log(res.data.code);
                   if (res.data.code == "1") {
                     console.log(res.data.code);
+                    that.$message({
+                      title: "code是1",
+                      message: "加入成功",
+                      type: "success"
+                    });
                     // this.tableData.splice(index, 1);
                   }else{
                     that.$message({
@@ -281,7 +269,7 @@
         this.$message.error(`删除了${str}`);
         this.multipleSelection = [];
       },
-      // 编辑操作
+      // 查看操作
       handleEdit(index, row) {
         this.idx = index;
         this.form = row;
@@ -355,43 +343,7 @@
           }
         }
       },
-      // 改变数据
-      changeData(){
-        console.log(this.tableData);
-        this.tableData=[{
-          blink_number: "",
-          student_number:"",
-          blink_title: "",
-          blink_content:"",
-          create_time: "",
-          blink_college: "",
-          blink_field:"",
-          blink_state: "",
-          student_name:'',
-        }]
-        console.log("changeData");
-        console.log(this.tableData);
-        console.log(this.searchData);
 
-        this.tableData=this.searchData
-
-        // for(let i = 0; i<this.searchData.length;i++){
-        //   console.log(i);
-        //   console.log("i个");
-        //   console.log(this.searchData[i].blink_number);
-        //   this.tableData[i].blink_number=this.searchData[i].blink_number
-        //   console.log("blink number");
-        //   this.tableData[i].blink_title=this.searchData[i].blink_title
-        //   this.tableData[i].blink_content=this.searchData[i].blink_content
-        //   this.tableData[i].creat_time=this.searchData[i].create_time
-        //   this.tableData[i].blink_college=this.searchData[i].blink_college
-        //   this.tableData[i].blink_field=this.searchData[i].blink_field
-        //   this.tableData[i].blink_state=this.searchData[i].blink_state
-        //   this.tableData[i].student_name=this.searchData[i].student_name
-        //
-        // }
-        console.log(this.tableData);
-      }
     }
   }
 </script>
