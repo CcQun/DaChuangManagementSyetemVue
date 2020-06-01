@@ -103,7 +103,7 @@
             path:'blink',
             children:[
               {id:'quit', authName:'退出系统', path:'app_login',},
-              {id: 'wel', authName: '主页系统', path: 'wel',}
+              {id: 'wel', authName: '主页系统', path: 'teacher_main',}
             ]
           }
         ],
