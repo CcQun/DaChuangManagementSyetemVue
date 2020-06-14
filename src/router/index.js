@@ -14,6 +14,9 @@ import Project_Browse from "../components/project/Project_Browse";
 import Project_Create from "../components/project/Project_Create";
 import Project_My_Apply from "../components/project/Project_My_Apply";
 import Project_My_Release from "../components/project/Project_My_Release";
+import Project_Management from "../components/management/Project_Management";
+import Direct_Approval from "../components/management/Direct_Approval";
+
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
 
@@ -42,7 +45,7 @@ const routes = [
     redirect: '/wel',
     children:[{path:'/wel',name:'wel',component:Wel},
       { path:'/Release', name:'release', component:Release},
-
+      { path:'/Project_Management', name:'project_management', component:Project_Management},
       { path:'/Browse', name:'browse', component:Browse},
       { path:'/My_Release', name:'my_release', component:My_Release},
       { path:'/My_Apply', name:'my_apply', component:My_Apply},
@@ -60,6 +63,7 @@ const routes = [
       // {path:'/wel',name:'wel',component:Wel},
       { path:'/Project_Create', name:'project_create', component:Project_Create},
       { path:'/Project_My_Release', name:'project_my_release', component:Project_My_Release},
+      { path:'/Direct_Approval', name:'direct_approval', component:Direct_Approval},
     ]
   },
   // {

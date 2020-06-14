@@ -92,7 +92,7 @@
             authName:'项目管理',
             path:'',
             children:[
-              {id:'project_manage', authName:'项目管理', path:'create1',},
+              {id:'project_manage', authName:'项目管理', path:'project_management',},
             ]
           },
           {

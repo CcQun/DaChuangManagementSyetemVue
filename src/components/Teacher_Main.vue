@@ -85,7 +85,7 @@
             children:[
               {id:'project_create', authName:'发布项目', path:'project_create',},
               {id: 'project_my_release', authName: '我的发布', path: 'project_my_release',},
-              {id:'direct_approval', authName:'指导申请', path:'direct_approval',},
+
             ]
           },
           {
@@ -93,8 +93,7 @@
             authName:'项目管理',
             path:'',
             children:[
-              {id:'create1', authName:'立项申请书', path:'create1',},
-              {id: 'choose1', authName: '项目申请书情况', path: 'choose1',}
+              {id:'direct_approval', authName:'指导申请', path:'direct_approval',},
             ]
           },
 
