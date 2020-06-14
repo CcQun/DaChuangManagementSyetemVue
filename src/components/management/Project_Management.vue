@@ -41,6 +41,7 @@
 
         <el-table-column label="上传文件" width="180" align="center">
           <template slot-scope="scope">
+
             <el-upload
               class="upload-demo"
               :action="actionsUrl"
@@ -56,6 +57,7 @@
               <el-button size="el-upload__text" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">支持jpg/png/pdf文件</div>
             </el-upload>
+
           </template>
         </el-table-column>
 
@@ -71,6 +73,7 @@
         ></el-pagination>
       </div>
     </div>
+
 
 
     <!-- 小组成员弹出框 -->
@@ -160,6 +163,7 @@
         delList: [],
         editVisible: false,
         Member_Visible: false,
+        File_Visible: false,
         pageTotal: 0,
         member_form: {
 
@@ -322,7 +326,7 @@
               //请求方式
               method: "post",
               //请求路劲
-              url: "/api/apply/applydirect",
+              url: "/apply/applydirect",
               //请求参数
               data: params
               //请求成功的回调函数
@@ -358,6 +362,7 @@
         this.editVisible = false;
       },
 
+
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
@@ -369,7 +374,8 @@
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
-      }
+      },
+
     }
   }
 </script>
@@ -392,4 +398,30 @@
   .mr10 {
     margin-right: 10px;
   }
+
+  .avatar-uploader /deep/.el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 95px;
+    height: 95px;
+    line-height: 95px;
+    text-align: center;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+  }
+  .avatar {
+    width: 95px;
+    height: 95px;
+  }
+
 </style>
