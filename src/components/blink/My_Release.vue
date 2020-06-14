@@ -493,8 +493,11 @@
       // 改变状态
       changeState(){
         for(let i = 0; i<this.tableData.length;i++){
-          if(this.tableData[i].blink_state=='0'){
+          if(this.tableData[i].blink_state=='0'||this.tableData[i].blink_state=='1'){
             this.tableData[i].blink_state='未满'
+          }
+          if(this.tableData[i].blink_state=='2'){
+            this.tableData[i].blink_state='已满'
           }
         }
       },

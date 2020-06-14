@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 
 import Login from '../components/Login'
 import Main from '../components/Main'
-import Create from '../components/management/Create'
 import Release from "../components/blink/Release";
 import Browse from "../components/blink/Browse";
 import Wel from "../components/wel";
@@ -31,11 +30,11 @@ const routes = [
     name:'/app_login',
     component:Login
   },
-  {
-    path:'/teacher_main',
-    name:'/teacher_main',
-    component:Teacher_Main
-  },
+  // {
+  //   path:'/teacher_main',
+  //   name:'/teacher_main',
+  //   component:Teacher_Main
+  // },
   {
     path:'/main',
     name:'main',
@@ -43,7 +42,7 @@ const routes = [
     redirect: '/wel',
     children:[{path:'/wel',name:'wel',component:Wel},
       { path:'/Release', name:'release', component:Release},
-      { path:'/Create', name:'create', component:Create},
+
       { path:'/Browse', name:'browse', component:Browse},
       { path:'/My_Release', name:'my_release', component:My_Release},
       { path:'/My_Apply', name:'my_apply', component:My_Apply},
@@ -54,8 +53,11 @@ const routes = [
   {
     path:'/teacher_main',
     name:'teacher_main',
+    // redirect: '/wel',
     component:Teacher_Main,
+
     children:[
+      // {path:'/wel',name:'wel',component:Wel},
       { path:'/Project_Create', name:'project_create', component:Project_Create},
       { path:'/Project_My_Release', name:'project_my_release', component:Project_My_Release},
     ]

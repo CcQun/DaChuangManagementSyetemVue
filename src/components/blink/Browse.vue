@@ -201,6 +201,12 @@
             type: "error"
           });
           console.log(1);
+        }else if(row.blink_state=='已满'){
+          this.$message({
+            title: "标题",
+            message: "该blink已满！",
+            type: "error"
+          });
         }else{
           this.$confirm('确定要加入么？', '提示', {
             type: 'success'
@@ -229,7 +235,7 @@
                     console.log(res.data.code);
                     that.$message({
                       title: "code是1",
-                      message: "加入成功",
+                      message: "申请加入成功",
                       type: "success"
                     });
                     // this.tableData.splice(index, 1);
@@ -338,8 +344,11 @@
       // 改变状态
       changeState(){
         for(let i = 0; i<this.tableData.length;i++){
-          if(this.tableData[i].blink_state=='0'){
+          if(this.tableData[i].blink_state=='0'||this.tableData[i].blink_state=='1'){
             this.tableData[i].blink_state='未满'
+          }
+          if(this.tableData[i].blink_state=='2'){
+            this.tableData[i].blink_state='已满'
           }
         }
       },

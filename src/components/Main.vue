@@ -89,11 +89,10 @@
           },
           {
             id:'02',
-            authName:'汇总统计',
+            authName:'项目管理',
             path:'',
             children:[
-              {id:'create1', authName:'立项申请书', path:'create1',},
-              {id: 'choose1', authName: '项目申请书情况', path: 'choose1',}
+              {id:'project_manage', authName:'项目管理', path:'create1',},
             ]
           },
           {
@@ -134,7 +133,7 @@
           'wel':'el-icon-news',
           'my_release':'el-icon-menu',
           'my_apply':'el-icon-menu',
-
+          'project_manage':'el-icon-s-management',
         },
       }
 

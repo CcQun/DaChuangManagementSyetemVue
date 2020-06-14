@@ -94,20 +94,36 @@
         },
         tableData: [
           {
-
-            create_time: "2018-12-22T00:00:00.000+0000",
-            direct_teacher_number: 10000001,
-            direct_teacher_name: "LiYu",
-            project_State: 0,
-            student_name: null,
-            create_teacher_name: "LiYu",
-            project_College: "Software college",
-            project_number: 1,
-            student_number: null,
-            create_teacher_number: 10000001,
-            project_Description: "Develop and design using the latest technology",
-            project_Field: "System development",
-            project_Name: "Design and implementation of seckilling system"
+            create_teacher_name: '',
+            create_teacher_number: '',
+            create_time: '',
+            direct_teacher_name: '',
+            direct_teacher_number: '',
+            project_College: '',
+            project_Description: '',
+            project_Field: '',
+            project_Name: '',
+            project_State: '',
+            project_number: '',
+            student_name: '',
+            student_number: '',
+          }
+        ],
+        tableData1: [
+          {
+            create_teacher_name: '',
+            create_teacher_number: '',
+            create_time: '',
+            direct_teacher_name: '',
+            direct_teacher_number: '',
+            project_College: '',
+            project_Description: '',
+            project_Field: '',
+            project_Name: '',
+            project_State: '',
+            project_number: '',
+            student_name: '',
+            student_number: '',
           }
         ],
         apply_project:
@@ -154,8 +170,8 @@
             // console.log(res.data.code);
             if (res.data.code == "1") {
               that.tableData = res.data.data;
-              // that.changeData()
-              that.changeState()
+              // that.delete_project();
+              that.changeState();
             }else{
               that.$message({
                 title: "code不是1",
@@ -186,18 +202,22 @@
       // 加入操作
       handleApply(index, row) {
         // 二次确认加入
+        // console.log(this.tableData);
+
         this.apply_project.student_number=Cookies.get('student_number');
         this.apply_project.project_number=row.project_number;
-        console.log(row.student_number);
-        console.log(this.apply_project.student_number);
-        if (this.apply_project.student_number == row.student_number){
+
+        // console.log(this.apply_project.student_number);
+        console.log(row.project_State);
+
+        if(row.project_State==='已满'){
           this.$message({
             title: "标题",
-            message: "你不能加入自己发布的组队！",
+            message: "该项目已满，不能加入！",
             type: "error"
           });
           console.log(1);
-        }else{
+        } else{
           this.$confirm('确定要加入么？', '提示', {
             type: 'success'
           })
@@ -288,7 +308,10 @@
             if (res.data.code == "1") {
 
               that.tableData = res.data.data;
+              console.log(that.tableData.length);
               that.changeState();
+              // that.delete_project();
+              console.log(that.tableData.length);
 
             }else{
               that.$message({
@@ -308,12 +331,30 @@
         this.loading=false
 
       },
+      // 删除已满project
+      delete_project(){
+        // for(let i = 0; i<this.tableData1.length;i++){
+        //    if(this.tableData1[i].project_State=='已满'){
+        //     this.tableData[i]=this.tableData1[i];
+        //   }
+        // }
+        // console.log(this.tableData);
+        this.tableData=this.tableData1;
+        console.log(this.tableData);
+      },
       // 改变状态
       changeState(){
+
+
         for(let i = 0; i<this.tableData.length;i++){
-          if(this.tableData[i].blink_state=='0'){
-            this.tableData[i].blink_state='未满'
+          if(this.tableData[i].project_State=='0'||this.tableData[i].project_State=='1' || this.tableData[i].project_State=='2'){
+            this.tableData[i].project_State='还未满'
           }
+          if(this.tableData[i].project_State=='3' || this.tableData[i].project_State=='4'){
+            this.tableData[i].project_State='已满'
+          }
+
+
         }
       },
     }

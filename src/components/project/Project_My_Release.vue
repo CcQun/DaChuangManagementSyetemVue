@@ -474,9 +474,12 @@
       // 改变状态
       changeState(){
         for(let i = 0; i<this.tableData.length;i++){
-          // if(this.tableData[i].blink_state=='0'){
-          //   this.tableData[i].blink_state='未满'
-          // }
+          if(this.tableData[i].project_State=='0'||this.tableData[i].project_State=='1' || this.tableData[i].project_State=='2'){
+            this.tableData[i].project_State='未满'
+          }
+          if(this.tableData[i].project_State=='3' || this.tableData[i].project_State=='4'){
+            this.tableData[i].project_State='已满'
+          }
         }
       },
     }

@@ -62,7 +62,7 @@
           {
 
             project_approval:'',
-            project_description: "y",
+            project_description: "",
             project_number: '',
             create_time: "",
             project_state: "",
@@ -152,9 +152,14 @@
       // 改变状态
       changeState(){
         for(let i = 0; i<this.tableData.length;i++){
-          if(this.tableData[i].project_state=='0'){
+          if(this.tableData[i].project_state=='0'||this.tableData[i].project_state=='1' || this.tableData[i].project_state=='2'){
             this.tableData[i].project_state='未满'
           }
+          if(this.tableData[i].project_state=='3' || this.tableData[i].project_state=='4'){
+            this.tableData[i].project_state='已满'
+          }
+
+
         }
         for(let i = 0; i<this.tableData.length;i++){
           if(this.tableData[i].project_approval=='0'){
