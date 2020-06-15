@@ -16,6 +16,7 @@ import Project_My_Apply from "../components/project/Project_My_Apply";
 import Project_My_Release from "../components/project/Project_My_Release";
 import Project_Management from "../components/management/Project_Management";
 import Direct_Approval from "../components/management/Direct_Approval";
+import Project_Mana from "../components/management/Project_Mana";
 
 // const Login = () => import('../components/Login')
 // import Main from "../components/Main";
@@ -46,6 +47,7 @@ const routes = [
     children:[{path:'/wel',name:'wel',component:Wel},
       { path:'/Release', name:'release', component:Release},
       { path:'/Project_Management', name:'project_management', component:Project_Management},
+      { path:'/Project_Mana', name:'project_mana', component:Project_Mana},
       { path:'/Browse', name:'browse', component:Browse},
       { path:'/My_Release', name:'my_release', component:My_Release},
       { path:'/My_Apply', name:'my_apply', component:My_Apply},

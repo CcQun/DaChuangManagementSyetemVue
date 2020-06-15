@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="container" @click="getMyProject()">
       <div class="handle-box">
       </div>
@@ -41,7 +40,6 @@
         <!--              :before-upload="beforeUpload"-->
         <el-table-column label="上传文件" width="180" align="center">
           <template slot-scope="scope">
-
             <el-upload
               class="upload-demo"
               :action="actionsUrl"
@@ -56,7 +54,6 @@
               <el-button size="el-upload__text" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">支持jpg/png/pdf文件</div>
             </el-upload>
-
           </template>
         </el-table-column>
 
@@ -111,7 +108,6 @@
         <el-button type="primary" @click="saveEdit">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -119,7 +115,7 @@
   import Cookies from 'js-cookie';
   import { mapMutations } from 'vuex';
   export default {
-    name: "Project_Management",
+    name: "Project_Mana",
     data(){
       return {
         actionsUrl: "/api/usr/fileUpload", //地址最好是拼接一下
@@ -138,12 +134,12 @@
           },
         team_member:[
           {
-          team_member1:'',
-          team_member2:'',
-          team_member3:''
+            team_member1:'',
+            team_member2:'',
+            team_member3:''
           },
         ],
-          tableData: [
+        tableData: [
           {
             project_number: "",
             project_name:"",
@@ -186,7 +182,7 @@
         },
         apply_direct: {
           project_number:'',
-          teacher_number:''
+          teacher_number:'',
         },
         ApprovalForm:[
           {
@@ -215,7 +211,6 @@
         },
 
         loading:true
-
       };
     },
     methods:{
@@ -252,7 +247,6 @@
 
             // console.log(res.data.code);
             if (res.data.code == "1") {
-
               that.tableData = res.data.data;
               // that.changeState();
             }else{
@@ -301,17 +295,6 @@
         this.Member_Visible = true;
 
       },
-      // 上传文件
-      upLoad(){
-        let formData = new FormData();
-        formData.append('id', this.ID);
-        formData.append('file', this.file);
-
-        this.$axios.post('/api/usr/fileUpload', formData)
-          .then(function (response) {
-            console.log(response);
-          })
-      },
       // 保存编辑
       saveMember() {
         this.Member_Visible = false;
@@ -319,8 +302,12 @@
       // 保存编辑
       saveEdit() {
         this.apply_direct.teacher_number=this.teacher_From.teacher_number;
-        console.log(this.apply_direct);
+        // console.log(this.apply_direct);
         let that= this;
+        // that.myApply_project.student_number=Cookies.get('student_number');
+        console.log(that.apply_direct);
+        console.log(that.apply_direct.teacher_number);
+        console.log(that.apply_direct.project_number);
         let params = JSON.stringify(that.apply_direct);
         that
           .$axios({
@@ -338,16 +325,16 @@
           )
           .then(function(res) {
 
+            // console.log(res.data.code);
             if (res.data.code == "1") {
-              that.$message({
-                title: "请求成功",
-                message: "添加指导老师成功",
-                type: "success"
-              });
+
+              that.tableData = res.data.data;
+              console.log("_________________________");
+              // that.changeState();
             }else{
               that.$message({
                 title: "信息错误",
-                message: "选择指导老师错误",
+                message: "你暂时还没有项目",
                 type: "error"
               });
             }
@@ -362,8 +349,6 @@
 
         this.editVisible = false;
       },
-
-
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
@@ -373,19 +358,7 @@
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
-      beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
-      },
-      beforeUpload(file){
-        let fd = new FormData()
-        fd.append('file', file)
-        this.$axios.post("/usr/fileUpload", fd).then((res) => {
 
-        }, (res) => {
-          console.log(res)
-        })
-        return false
-      }
     }
   }
 </script>

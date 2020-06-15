@@ -221,8 +221,8 @@
 
             }else{
               that.$message({
-                title: "信息错误",
-                message: "信息错误",
+                title: "你还没有加入组队",
+                message: "你还没有加入组队",
                 type: "error"
               });
             }
