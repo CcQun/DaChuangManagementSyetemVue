@@ -38,7 +38,7 @@
           </template>
         </el-table-column>
 
-
+        <!--              :before-upload="beforeUpload"-->
         <el-table-column label="上传文件" width="180" align="center">
           <template slot-scope="scope">
 
@@ -47,7 +47,6 @@
               :action="actionsUrl"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
-              :before-remove="beforeRemove"
               name="fileName"
               multiple
               :limit="1"
@@ -144,7 +143,7 @@
           team_member3:''
           },
         ],
-        tableData: [
+          tableData: [
           {
             project_number: "",
             project_name:"",
@@ -375,7 +374,16 @@
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
+      beforeUpload(file){
+        let fd = new FormData()
+        fd.append('file', file)
+        this.$axios.post("/usr/fileUpload", fd).then((res) => {
 
+        }, (res) => {
+          console.log(res)
+        })
+        return false
+      }
     }
   }
 </script>
