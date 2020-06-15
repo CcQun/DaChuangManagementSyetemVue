@@ -1,54 +1,61 @@
 <template>
-  <div id="Login">
+  <div>
 
     <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px" class="login-box">
       <h3 class="login-title">大创平台系统</h3>
-      <el-form-item label="学号" prop="number">
-        <el-input type="text" placeholder="请输入账号" v-model="form.number"/>
+      <el-form-item label="学号" prop="username">
+        <el-input type="text" placeholder="请输入账号" v-model="form.username"/>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
       </el-form-item>
       <el-form-item>
-        <el-form-item >
-          <template>
-            <el-radio v-model="radio" label="1" style="color: #303133">学生</el-radio>
-            <el-radio v-model="radio" label="2" style="color: #303133">老师</el-radio>
-          </template>
-        </el-form-item>
-        <el-form-item>
-        <el-button type="primary" style="float:right" v-on:click="onSubmit('loginForm')">登 录</el-button>
-        </el-form-item>
+<!--        <span slot="footer" >-->
+        <el-button type="primary" style="float:right" v-on:click="onSubmit()">登 录</el-button>
+<!--        </span>-->
       </el-form-item>
     </el-form>
 
+<!--    <el-dialog-->
+<!--      title="提  示"-->
+<!--      :visible.sync="dialogVisible"-->
+<!--      width="30%"-->
+<!--      :before-close="handleClose">-->
+<!--      <span>请输入账号和密码</span>-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
 
+<!--      </span>-->
+<!--    </el-dialog>-->
   </div>
 </template>
 
-
-
 <script>
-  import Cookies from 'js-cookie';
-  import { mapMutations } from 'vuex';
   export default {
     name: "Login",
     data() {
       return {
-        radio:"",
-        form: {
-          number: '17301091',
-          password: '123456',
-          ts :''
+        form: {//这是登录表单验证对象
+          username: '',
+          password: '',
+          //
+          // note: {
+          //   backgroundImage: "url(" + require("../assets/logo.png") + ")",
+          //   backgroundRepeat: "no-repeat",
+          //   backgroundSize: "25px auto",
+          //   marginTop: "5px",
+          // }
         },
 
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
         rules: {
-          number: [
-            {required: true, message: '账号不可为空', trigger: 'blur'}
+          username: [
+            {required: true, message: '账号不可为空', trigger: 'blur'},
+            { min: 3, max:10, message: "长度在3-10个字符", trigger: "blur"}
           ],
           password: [
-            {required: true, message: '密码不可为空', trigger: 'blur'}
+            {required: true, message: '密码不可为空', trigger: 'blur'},
+            { min: 6, max:15, message: "长度在6-15个字符", trigger: "blur"}
           ]
         },
 
@@ -58,121 +65,23 @@
       }
     },
     methods: {
-      ...mapMutations(['setToken']),
-
-      onSubmit(formName) {
-        console.log(formName.number);
-        console.log(this.form);
-        //为表单绑定验证功能
-        let that = this;
-        if(that.radio=='1'){
-          that.form.ts='0'
-        }else if(that.radio=='2'){
-          that.form.ts='1'
-        }
-        that.$refs[formName].validate((valid) => {
-          // console.log(that.radio+"radio");
-          let params = JSON.stringify(that.form);
-          if (valid&&that.radio=='1') {
-            console.log(that.radio+"radio");
-            //ajax请求
-                that
-                  .$axios({
-                      //请求方式
-                      method: "post",
-                      //请求路劲
-                      url: "/api/usr/login",
-                      //请求参数
-                      data: params
-                      //请求成功的回调函数
-                    },
-                    {
-                      emulateJSON: true
-                    }
-                  )
-                  .then(function(res) {
-
-                    if (res.data.code == "1") {
-                      Cookies.set('student_name',res.data.msg ,3600)
-                      Cookies.set('student_number',that.form.number ,3600)
-
-                      that.$message({
-                        title: "登陆成功",
-                        message: "登陆成功",
-                        type: 'success'
-                      });
-                      that.$router.push("/main");
-
-                    }else{
-
-                      that.$message({
-                        title: "登陆失败",
-                        message: "请输入正确的用户名或密码",
-                        type: "error"
-                      });
-                    }
-                  }).catch(function() {
-                      that.$notify({
-                        title: "登陆失败",
-                        message: "服务器异常",
-                        type: "error"
-                  });
-                  console.log("服务器异常");
-                  });
-
-
-          } else if((valid&&that.radio=='2')){
-            //ajax请求
-            that
-              .$axios({
-                  //请求方式
-                  method: "post",
-                  //请求路劲
-                  url: "/api/usr/login",
-                  //请求参数
-                  data: params
-                  //请求成功的回调函数
-                },
-                {
-                  emulateJSON: true
-                }
-              )
-              .then(function(res) {
-
-                if (res.data.code == "1") {
-                  Cookies.set('teacher_name',res.data.msg ,3600)
-                  Cookies.set('teacher_number',that.form.number ,3600)
-
-                  that.$message({
-                    title: "登陆成功",
-                    message: "登陆成功",
-                    type: 'success'
-                  });
-                  that.$router.push("/teacher_main");
-
-                }else{
-
-                  that.$message({
-                    title: "登陆失败",
-                    message: "请输入正确的用户名或密码",
-                    type: "error"
-                  });
-                }
-              }).catch(function() {
-              that.$notify({
-                title: "登陆失败",
-                message: "服务器异常",
-                type: "error"
-              });
-              console.log("服务器异常");
+      onSubmit() {
+        // 为表单绑定验证功能
+        this.$refs.loginForm.validate( async valid => {
+          if (valid) {
+            // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
+            this.$message({
+              message: '登录成功',
+              type: 'success'
             });
+            // const {data:res} =await this.$http.post('login',this.form)
+            // console.log(res);
 
-
-          }
-          else {
+            await this.$router.push("/main");
+          } else {
             // this.dialogVisible = true;
-            that.$message({
-              message: '请选择正确类型',
+            this.$message({
+              message: '请输入正确格式',
               type: 'error'
             });
             return false;
